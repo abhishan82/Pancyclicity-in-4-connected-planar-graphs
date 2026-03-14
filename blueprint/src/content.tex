@@ -1,0 +1,588 @@
+% Blueprint for: Towards Pancyclicity in 4-Connected Planar Graphs
+% Authors: Bojan Mohar, Abhinav Shantanam
+% For use with leanblueprint (PatrickMassot/leanblueprint)
+
+\chapter{Foundations}
+
+% ============================================================
+% SECTION: k-Connectivity
+% ============================================================
+
+\section{Graph Connectivity}
+
+\begin{definition}[k-connectivity]
+  \label{def:k_connected}
+  \lean{SimpleGraph.IsKConnected}
+  \notready
+  A graph $G$ is said to be \emph{$k$-connected} if it has at least $k+1$
+  vertices and, for every $(k-1)$-subset $V'$ of $V(G)$, the graph $G - V'$
+  is connected.
+\end{definition}
+
+\begin{lemma}[k-connectivity monotonicity]
+  \label{lem:k_connected_mono}
+  \lean{SimpleGraph.IsKConnected.mono}
+  \uses{def:k_connected}
+  \notready
+  If $G$ is $k$-connected and $j \le k$, then $G$ is $j$-connected.
+\end{lemma}
+
+\begin{lemma}[4-connected minimum degree]
+  \label{lem:four_conn_min_deg}
+  \lean{SimpleGraph.IsKConnected.minDegree_ge}
+  \uses{def:k_connected}
+  \notready
+  If $G$ is $k$-connected, then the minimum degree of $G$ is at least $k$.
+\end{lemma}
+
+\begin{lemma}[4-connected edge count]
+  \label{lem:four_conn_edge_count}
+  \lean{SimpleGraph.IsKConnected.card_edgeFinset_ge}
+  \uses{def:k_connected, lem:four_conn_min_deg}
+  \notready
+  If $G$ is a $4$-connected graph on $n$ vertices, then $|E(G)| \ge 2n$.
+\end{lemma}
+
+% ============================================================
+% SECTION: Planar Graphs
+% ============================================================
+
+\section{Planar Graphs and Embeddings}
+
+\begin{definition}[Combinatorial map]
+  \label{def:comb_map}
+  \lean{SimpleGraph.CombMap}
+  \notready
+  A \emph{combinatorial map} on a graph $G$ assigns to each vertex $v$ a
+  cyclic ordering of the darts (oriented edges) leaving $v$. Formally, it is
+  a permutation $\sigma$ on the set of darts of $G$ such that $\sigma$ maps
+  each dart at $v$ to another dart at $v$, and the orbits of $\sigma$ at $v$
+  correspond exactly to the neighbors of $v$.
+\end{definition}
+
+\begin{definition}[Plane graph]
+  \label{def:plane_graph}
+  \lean{PlaneGraph}
+  \uses{def:comb_map}
+  \notready
+  A \emph{plane graph} is a simple graph $G$ together with a combinatorial
+  map of genus $0$ (equivalently, a cellular embedding into the sphere/plane).
+\end{definition}
+
+\begin{definition}[Face]
+  \label{def:face}
+  \lean{PlaneGraph.Face}
+  \uses{def:plane_graph}
+  \notready
+  A \emph{face} of a plane graph is an orbit of the face permutation
+  $\varphi = \sigma \circ \alpha$, where $\alpha$ is the dart-reversal
+  involution and $\sigma$ is the rotation system. The \emph{size} of a face
+  $F$, denoted $|F|$, is the number of darts in its orbit (i.e., the length
+  of the boundary walk, with repetitions).
+\end{definition}
+
+\begin{definition}[Infinite (outer) face]
+  \label{def:outer_face}
+  \lean{PlaneGraph.outerFace}
+  \uses{def:face}
+  \notready
+  One distinguished face of a plane graph is designated as the \emph{infinite
+  face} (or outer face).
+\end{definition}
+
+\begin{definition}[Planar graph]
+  \label{def:is_planar}
+  \lean{SimpleGraph.IsPlanar}
+  \uses{def:plane_graph}
+  \notready
+  A graph is \emph{planar} if it admits a plane graph structure (i.e., a
+  combinatorial map of genus $0$).
+\end{definition}
+
+\begin{theorem}[Euler's formula]
+  \label{thm:euler_formula}
+  \lean{PlaneGraph.euler_formula}
+  \uses{def:plane_graph, def:face}
+  \notready
+  For a connected plane graph $G$ on $n$ vertices with $m$ edges and $f$
+  faces, $n - m + f = 2$.
+\end{theorem}
+
+\begin{definition}[Dual graph]
+  \label{def:dual_graph}
+  \lean{PlaneGraph.dual}
+  \uses{def:plane_graph, def:face}
+  \notready
+  Given a plane graph $G$, its \emph{dual graph} $G^*$ has a vertex $F^*$
+  for each face $F$ of $G$ and an edge $e^*$ for each edge $e$ of $G$
+  joining the two faces incident with $e$.
+\end{definition}
+
+\begin{definition}[Internal dual]
+  \label{def:internal_dual}
+  \lean{PlaneGraph.internalDual}
+  \uses{def:dual_graph, def:outer_face}
+  \notready
+  The \emph{internal dual} of a plane graph $G$ with outer face dual to the
+  vertex $v^* \in V(G^*)$ is the graph $G^* - v^*$.
+\end{definition}
+
+\begin{theorem}[Whitney's theorem --- axiomatized]
+  \label{thm:whitney}
+  \lean{SimpleGraph.IsKConnected.unique_planar_embedding}
+  \uses{def:k_connected, def:is_planar, def:plane_graph}
+  \notready
+  A $3$-connected planar graph has a unique combinatorial embedding (up to
+  orientation). \textbf{Axiomatized.}
+\end{theorem}
+
+% ============================================================
+% SECTION: Outerplanar Graphs
+% ============================================================
+
+\section{Outerplanar Graphs}
+
+\begin{definition}[Outerplanar graph]
+  \label{def:outerplanar}
+  \lean{SimpleGraph.IsOuterplanar}
+  \uses{def:is_planar}
+  \notready
+  An \emph{outerplanar graph} is a planar graph that can be drawn in the
+  plane with no internal vertices (i.e., all vertices lie on the boundary
+  of the infinite face).
+\end{definition}
+
+\begin{definition}[Outerplane graph]
+  \label{def:outerplane}
+  \lean{OuterplaneGraph}
+  \uses{def:plane_graph, def:outer_face}
+  \notready
+  An \emph{outerplane graph} is an outerplanar graph with a fixed planar
+  embedding in which all vertices lie on the boundary of the infinite face.
+\end{definition}
+
+\begin{definition}[Chord]
+  \label{def:chord}
+  \lean{OuterplaneGraph.chord}
+  \uses{def:outerplane}
+  \notready
+  A \emph{chord} of an outerplane graph is an edge not contained in the
+  boundary of its infinite face.
+\end{definition}
+
+\begin{lemma}[Internal dual of 2-connected outerplanar is a tree]
+  \label{lem:outerplanar_dual_tree}
+  \lean{OuterplaneGraph.internalDual_isTree}
+  \uses{def:outerplane, def:internal_dual, def:k_connected}
+  \notready
+  The internal dual of a $2$-connected outerplanar graph is a tree.
+\end{lemma}
+
+% ============================================================
+% SECTION: Hamiltonian Cycles
+% ============================================================
+
+\section{Hamiltonian Cycles and the $(G,C)$ Decomposition}
+
+\begin{theorem}[Tutte's theorem --- axiomatized]
+  \label{thm:tutte}
+  \lean{SimpleGraph.IsKConnected.isHamiltonian_of_isPlanar}
+  \uses{def:k_connected, def:is_planar}
+  \notready
+  Every $4$-connected planar graph is Hamiltonian. \textbf{Axiomatized.}
+\end{theorem}
+
+\begin{theorem}[Sanders' theorem --- axiomatized]
+  \label{thm:sanders}
+  \lean{SimpleGraph.IsKConnected.hamiltonianCycle_through_edges}
+  \uses{def:k_connected, def:is_planar}
+  \notready
+  If $G$ is a $4$-connected planar graph and $e_1, e_2 \in E(G)$, then
+  there exists a Hamiltonian cycle in $G$ containing both $e_1$ and $e_2$.
+  \textbf{Axiomatized.}
+\end{theorem}
+
+\begin{definition}[Hamiltonian decomposition $(G, C, G_0, G_1)$]
+  \label{def:ham_decomp}
+  \lean{PlaneGraph.HamiltonianDecomp}
+  \uses{def:plane_graph, def:outerplane}
+  \notready
+  For a plane Hamiltonian graph $G$ with Hamiltonian cycle $C$, we define
+  $(G, C, G_0, G_1)$ where $G_0$ and $G_1$ are the two $2$-connected
+  outerplane graphs with $C$ bounding a face of each, such that
+  $G_0 \cap G_1 = C$ and $|E(G_1)| \ge |E(G_0)|$. Let $c_i$ be the number
+  of chords in $G_i$.
+\end{definition}
+
+\begin{definition}[Internal dual trees $T_0, T_1$]
+  \label{def:internal_dual_trees}
+  \lean{PlaneGraph.HamiltonianDecomp.internalDualTrees}
+  \uses{def:ham_decomp, def:internal_dual}
+  \notready
+  For $(G, C, G_0, G_1)$, let $T_0$ and $T_1$ be the internal duals of
+  $G_0$ and $G_1$, respectively. We have
+  $V(T_0) \cup V(T_1) = V(G^*)$.
+\end{definition}
+
+% ============================================================
+% SECTION: Cycle Spectrum
+% ============================================================
+
+\section{Cycle Spectrum and Pancyclicity}
+
+\begin{definition}[Cycle spectrum]
+  \label{def:cycle_spectrum}
+  \lean{SimpleGraph.cycleSpectrum}
+  \notready
+  The \emph{cycle spectrum} of a simple graph $G$ on $n$ vertices, denoted
+  $\mathcal{C}(G)$, is the set of distinct lengths of cycles in $G$.
+\end{definition}
+
+\begin{definition}[Pancyclicity]
+  \label{def:pancyclic}
+  \lean{SimpleGraph.IsPancyclic}
+  \uses{def:cycle_spectrum}
+  \notready
+  A graph $G$ on $n$ vertices is \emph{pancyclic} if
+  $\mathcal{C}(G) = \{3, 4, \ldots, n\}$.
+\end{definition}
+
+\begin{definition}[Malkevitch's conjecture (statement)]
+  \label{def:malkevitch_conjecture}
+  \lean{SimpleGraph.malkevitch_conjecture}
+  \uses{def:k_connected, def:is_planar, def:pancyclic}
+  \notready
+  \textbf{Conjecture (Malkevitch).}
+  A $4$-connected planar graph is pancyclic if it contains a cycle of
+  length $4$.
+\end{definition}
+
+% ============================================================
+\chapter{Weight Functions}
+% ============================================================
+
+\section{Weight Function $w$}
+
+\begin{definition}[Weight function $w$]
+  \label{def:weight_w}
+  \lean{PlaneGraph.HamiltonianDecomp.weight_w}
+  \uses{def:internal_dual_trees, def:face}
+  \notready
+  For each $v \in V(T_0) \cup V(T_1)$, define $w(v) = |\mathrm{df}(v)| - 2$,
+  where $\mathrm{df}(v)$ is the face of $G$ dual to $v$.
+\end{definition}
+
+\begin{proposition}[Sum of weights]
+  \label{prop:weight_sum}
+  \lean{PlaneGraph.HamiltonianDecomp.sum_weight_eq}
+  \uses{def:weight_w, def:ham_decomp}
+  \notready
+  For each $i \in \{0, 1\}$,
+  $\sum_{v \in V(T_i)} w(v) = n - 2$.
+\end{proposition}
+
+\section{Weight Function $w'$}
+
+\begin{definition}[Weight function $w'$]
+  \label{def:weight_wprime}
+  \lean{PlaneGraph.HamiltonianDecomp.weight_wprime}
+  \uses{def:face}
+  \notready
+  For each $e \in E(G)$ with incident faces $Q_e, Q'_e \in F(G)$, define
+  $w'(e) = \frac{|Q_e| - 2}{|Q_e|} + \frac{|Q'_e| - 2}{|Q'_e|}$.
+\end{definition}
+
+\begin{corollary}[Sum of $w'$]
+  \label{cor:wprime_sum}
+  \lean{PlaneGraph.HamiltonianDecomp.sum_wprime_eq}
+  \uses{def:weight_wprime, prop:weight_sum}
+  \notready
+  If $G$ is a plane Hamiltonian graph on $n$ vertices, then
+  $\sum_{e \in E(G)} w'(e) = 2(n - 2)$.
+\end{corollary}
+
+% ============================================================
+\chapter{Proofs of Theorems 1.2 and 1.3}
+% ============================================================
+
+\section{Outerplane Cycle Enumeration}
+
+\begin{lemma}[Lemma 3.1: Outerplane cycle enumeration]
+  \label{lem:outerplane_cycles}
+  \lean{OuterplaneGraph.cycles_of_distinct_lengths}
+  \uses{def:outerplane, def:chord, def:internal_dual}
+  \notready
+  If $G$ is a $2$-connected outerplane graph on $n$ vertices containing $c$
+  chords and $e$ is an edge contained in the boundary of its infinite face,
+  then $G$ contains at least $c + 1$ cycles of pairwise distinct lengths
+  each containing the edge $e$.
+\end{lemma}
+
+\section{Theorem 1.2}
+
+\begin{theorem}[Theorem 1.2]
+  \label{thm:main_lower_bound}
+  \lean{SimpleGraph.IsKConnected.cycle_lengths_through_edge}
+  \uses{lem:outerplane_cycles, thm:sanders, def:ham_decomp,
+        lem:four_conn_edge_count}
+  \notready
+  If $G$ is a $4$-connected planar graph on $n$ vertices and $e$ is an edge
+  in $G$, then $G$ contains at least $\lceil n/2 \rceil + 1$ cycles of
+  pairwise distinct lengths each containing $e$.
+\end{theorem}
+
+\section{Theorem 1.3}
+
+\begin{definition}[Graph family $G_k$]
+  \label{def:gk_construction}
+  \lean{Pancyclicity.GraphFamily.Gk}
+  \notready
+  For any integer $k \ge 1$, define the graph $G_k$ on $3k+3$ vertices as
+  follows. Let $P_U = u_1 \cdots u_k$, $P_W = w_1 \cdots w_k$,
+  $P_V = v_1 \cdots v_{k+1}$ be disjoint paths. For each $i$, connect
+  $u_i$ and $w_i$ to both $v_i$ and $v_{i+1}$. Add vertices $v_0, v_{k+2}$
+  with specified adjacencies and edge $e = v_0 v_{k+2}$.
+\end{definition}
+
+\begin{lemma}[$G_k$ is 4-connected and planar]
+  \label{lem:gk_properties}
+  \lean{Pancyclicity.GraphFamily.Gk.isKConnected_four}
+  \uses{def:gk_construction, def:k_connected, def:is_planar}
+  \notready
+  For each $k \ge 1$, $G_k$ is $4$-connected and planar.
+\end{lemma}
+
+\begin{theorem}[Theorem 1.3: Tightness]
+  \label{thm:tightness}
+  \lean{Pancyclicity.GraphFamily.Gk.cycle_count_exact}
+  \uses{def:gk_construction, lem:gk_properties, lem:outerplane_cycles}
+  \notready
+  For any $k \ge 1$, $G_k$ on $3k+3$ vertices contains precisely $2k+2$
+  cycles of pairwise distinct lengths each containing $e$.
+\end{theorem}
+
+% ============================================================
+\chapter{Excluding 4-Cycles}
+% ============================================================
+
+\section{Face Counting Notation}
+
+\begin{definition}[Face counting notation]
+  \label{def:face_counts}
+  \lean{PlaneGraph.HamiltonianDecomp.FaceCounts}
+  \uses{def:ham_decomp, def:face}
+  \notready
+  For $(G, C, G_0, G_1)$, define for each $i \in \{0,1\}$ and
+  $j \in \{5, 6\}$:
+  $f_i^{\ge j}$ = number of faces of size $\ge j$ in $F(G_i) \setminus \{F_i\}$;
+  $s_i^{>j}$ = $\sum_{F : |F| > j} (|F| - j)$;
+  and $f^{\ge j}, s^{>j}$ for the corresponding totals over $F(G)$.
+\end{definition}
+
+\section{5-Block Structures}
+
+\begin{definition}[5-fan]
+  \label{def:five_fan}
+  \lean{PlaneGraph.FiveFan}
+  \uses{def:face}
+  \notready
+  A \emph{5-fan incident with $v$} is a maximal set $J \subset F(G)$ of
+  $5$-faces each incident with $v$ such that, in the cyclic list of faces
+  around $v$, all faces in $J$ appear consecutively.
+\end{definition}
+
+\begin{definition}[5-block]
+  \label{def:five_block}
+  \lean{PlaneGraph.FiveBlock}
+  \uses{def:face, def:dual_graph}
+  \notready
+  A \emph{5-block} is a maximal set $J \subset F(G)$ of $5$-faces such that
+  the induced dual subgraph $G^*_J$ is connected. A 5-block is
+  \emph{trivial} if $|J| = 1$.
+\end{definition}
+
+\begin{definition}[5-flower]
+  \label{def:five_flower}
+  \lean{PlaneGraph.FiveFlower}
+  \uses{def:five_block}
+  \notready
+  A \emph{5-flower} is a 5-block of six members $\{P_0, \ldots, P_5\}$ where
+  $P_0$ shares an edge with every other member, and the remaining members are
+  pairwise edge-disjoint. Equivalently, the dual 5-block is $K_{1,5}$.
+\end{definition}
+
+\begin{definition}[5-tree]
+  \label{def:five_tree}
+  \lean{PlaneGraph.FiveTree}
+  \uses{def:five_block}
+  \notready
+  A \emph{5-tree} is an acyclic 5-block $J$ such that each vertex $u$ in
+  the dual 5-block $G^*_J$ has degree in $\{0, 1, 2, 5\}$, with each degree
+  class forming an independent set, and no degree-1 vertex adjacent to a
+  degree-2 vertex. Every trivial 5-block and every 5-flower is a 5-tree.
+\end{definition}
+
+\begin{lemma}[5-tree counting]
+  \label{lem:five_tree_count}
+  \lean{PlaneGraph.FiveTree.member_count}
+  \uses{def:five_tree}
+  \notready
+  A 5-tree whose dual 5-block contains $p \ge 0$ vertices of degree 5
+  has $5p+1$ members and $5(3p+1)$ unshared edges. In particular, every
+  5-tree has at least 1 member and at least 5 unshared edges.
+\end{lemma}
+
+\section{Discharging}
+
+\begin{lemma}[Lemma 4.1: Upper bound on $s^{>5}$]
+  \label{lem:discharging}
+  \lean{PlaneGraph.discharging_bound}
+  \uses{def:face_counts, def:five_tree, def:five_fan, def:five_block,
+        cor:wprime_sum, thm:euler_formula, lem:five_tree_count}
+  \notready
+  If $G$ is a plane Hamiltonian graph on $n \ge 5$ vertices with
+  $\delta(G) \ge 4$ and not containing any $4$-cycles, then
+  $s^{>5} \le \frac{n}{3} - 10$.
+\end{lemma}
+
+% ============================================================
+\chapter{Proof of Theorem 1.4}
+% ============================================================
+
+\section{Cycle Enumeration from a Special Face}
+
+\begin{definition}[Leaf-triangle]
+  \label{def:leaf_triangle}
+  \lean{PlaneGraph.HamiltonianDecomp.LeafTriangle}
+  \uses{def:ham_decomp, def:face}
+  \notready
+  A \emph{leaf-triangle} of $(G, C)$ is a triangular face of $G$ whose
+  boundary contains exactly two edges of $C$. Its \emph{tip} is the vertex
+  shared between those two edges.
+\end{definition}
+
+\begin{definition}[Well-triangulated vertex]
+  \label{def:well_triangulated}
+  \lean{PlaneGraph.isWellTriangulated}
+  \uses{def:face}
+  \notready
+  A \emph{well-triangulated vertex} is one of even degree $d$ that is
+  incident with at least $d/2$ triangular faces.
+\end{definition}
+
+\begin{lemma}[Lemma 5.1: Enumeration lemma]
+  \label{lem:enumeration}
+  \lean{PlaneGraph.HamiltonianDecomp.enumeration_lemma}
+  \uses{def:ham_decomp, def:leaf_triangle, def:face_counts, def:weight_w,
+        def:internal_dual_trees, lem:outerplanar_dual_tree}
+  \notready
+  Let $G$ be a plane Hamiltonian graph on $n \ge 5$ vertices with
+  $\delta \ge 4$, no $4$-cycles, and $C$ a Hamiltonian cycle. If for some
+  $i \in \{0,1\}$ there exists a face $Q_i$ of size $\ge 5$ adjacent to two
+  leaf-triangles of $(G, C)$, then there is a set $\mathcal{C}_i$ of cycles
+  in $G$ of pairwise distinct lengths, each of size $\ge |Q_i|$ and containing
+  all vertices in $V(Q_i)$ not tips of the said leaf-triangles, with
+  $|\mathcal{C}_i| \ge n - 5 - s_i^{>5}$.
+\end{lemma}
+
+\begin{corollary}[Corollary 5.2]
+  \label{cor:well_triang_enum}
+  \lean{PlaneGraph.wellTriangulated_cycle_enumeration}
+  \uses{lem:enumeration, thm:sanders, def:well_triangulated, def:face_counts}
+  \notready
+  Let $G$ be a $4$-connected plane graph on $n \ge 5$ vertices without
+  $4$-cycles. If there exists a well-triangulated vertex $v$ of degree $4$
+  incident with faces $Q_0, R, Q_1, R'$ (where $R, R'$ triangular), then
+  for some $i$, there is a cycle set $\mathcal{C}$ of pairwise distinct
+  lengths with $|\mathcal{C}| \ge n - 5 - s^{>5}/2$.
+\end{corollary}
+
+\section{Main Result}
+
+\begin{theorem}[Theorem 5.3 / Theorem 1.4]
+  \label{thm:no_four_cycles}
+  \lean{SimpleGraph.IsKConnected.cycle_spectrum_no_four_cycles}
+  \uses{cor:well_triang_enum, lem:discharging, def:well_triangulated,
+        def:five_tree, def:k_connected, def:is_planar}
+  \notready
+  Let $G$ be a $4$-connected plane graph on $n \ge 5$ vertices without
+  $4$-cycles. Then there exist a set $U \subset V(G)$ of $\ge 3$ vertices
+  and a set of cycles of pairwise distinct lengths, each of size $\ge |U|+2$
+  and containing every vertex in $U$, such that $|\mathcal{C}| \ge 5n/6$.
+  Consequently, $|\mathcal{C}(G)| \ge \lceil 5n/6 \rceil + 2$.
+\end{theorem}
+
+% ============================================================
+\chapter{Additional Results}
+% ============================================================
+
+\begin{proposition}[Edge bound]
+  \label{prop:edge_bound}
+  \lean{PlaneGraph.edge_bound_no_four_cycles}
+  \uses{def:face, thm:euler_formula}
+  \notready
+  If $G$ is a plane graph on $n \ge 5$ vertices without $4$-cycles, then
+  $|E(G)| \le \frac{15}{7}(n-2)$.
+\end{proposition}
+
+\begin{proposition}[Leaf-paths partition]
+  \label{prop:leaf_paths}
+  \lean{SimpleGraph.IsTree.leafPathsPartition}
+  \notready
+  Every tree admits a leaf-paths partition: a partition of vertices into
+  disjoint paths such that at least one leaf of every path is a leaf of
+  the tree, and exactly one path ends in two tree-leaves.
+\end{proposition}
+
+\begin{proposition}[Chord bound]
+  \label{prop:chord_bound}
+  \lean{OuterplaneGraph.chord_bound_no_four_cycles}
+  \uses{def:outerplane, def:chord, thm:euler_formula}
+  \notready
+  For $(G, C, G_0, G_1)$ with $G$ having no $4$-cycles, the number of
+  chords $c_i$ satisfies $c_i \le \frac{5}{7}(n-3)$.
+\end{proposition}
+
+\begin{lemma}[Leaf-triangle bound]
+  \label{lem:leaf_triangle_bound}
+  \lean{PlaneGraph.HamiltonianDecomp.leaf_triangle_bound}
+  \uses{def:leaf_triangle, def:face_counts, prop:leaf_paths}
+  \notready
+  For $(G, C, G_0, G_1)$ with $G$ on $n \ge 5$ vertices, no $4$-cycles:
+  $t_i \ge s_i^{>5} + 2c_i - n + 4$.
+\end{lemma}
+
+\begin{corollary}[Leaf-triangle corollary]
+  \label{cor:leaf_triangle_cor}
+  \lean{PlaneGraph.HamiltonianDecomp.leaf_triangle_corollary}
+  \uses{lem:leaf_triangle_bound, lem:four_conn_edge_count}
+  \notready
+  Under the same conditions with $|E(G)| \ge 2n$:
+  (i) $t_1 \ge s_1^{>5} + 4$, and (ii) $t_0 + t_1 \ge s^{>5} + 8$.
+\end{corollary}
+
+% ============================================================
+\chapter{Open Problems}
+% ============================================================
+
+\begin{definition}[Conjecture 7.1 (statement)]
+  \label{def:conj_edge_cycle}
+  \lean{Pancyclicity.conjecture_edge_cycle_bound}
+  \uses{def:k_connected, def:is_planar, def:cycle_spectrum}
+  \notready
+  \textbf{Conjecture.}
+  Given a $4$-connected planar graph $G$ on $n$ vertices, for each edge
+  $e$, there exist $\ge \lfloor 2n/3 \rfloor + c$ cycles of pairwise distinct
+  lengths containing $e$, where $c$ is an integer constant.
+\end{definition}
+
+\begin{definition}[Conjecture 7.2 (statement)]
+  \label{def:conj_outerplanar}
+  \lean{Pancyclicity.conjecture_outerplanar_contiguous}
+  \uses{def:outerplanar, def:cycle_spectrum}
+  \notready
+  \textbf{Conjecture.}
+  Given a $2$-connected outerplanar graph on $n$ vertices with $\ge 3n/2$
+  edges, there exist $\ge \lfloor n/2 \rfloor + c$ cycles of pairwise distinct
+  lengths forming a contiguous interval in $\{3, \ldots, n\}$.
+\end{definition}

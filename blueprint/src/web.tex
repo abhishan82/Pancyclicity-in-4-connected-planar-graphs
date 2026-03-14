@@ -1,0 +1,27 @@
+% This file makes a web version of the blueprint
+% It should include all the \usepackage needed for this version.
+% The template includes standard AMS packages.
+% It is otherwise a very minimal preamble (you should probably at least
+% add cleveref and tikz-cd).
+
+\documentclass{report}
+
+\usepackage{amssymb, amsthm, amsmath}
+\usepackage{hyperref}
+\usepackage[showmore, dep_graph]{blueprint}
+
+
+\input{macros/common}
+\input{macros/web}
+
+\home{https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs}
+\github{https://github.com/abhishan82/Pancyclicity-in-4-connected-planar-graphs}
+\dochome{https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/docs}
+
+\title{C4_free}
+\author{abhishan82}
+
+\begin{document}
+\maketitle
+\input{content}
+\end{document}
