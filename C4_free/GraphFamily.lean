@@ -1,0 +1,146 @@
+/-
+Copyright (c) 2025 Abhinav Shantanam. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Abhinav Shantanam
+-/
+import Mathlib.Data.Set.Card
+import C4_free.CycleSpectrum
+
+/-!
+# The Extremal Graph Family G_k (Theorem 1.3)
+
+For each integer k ≥ 1, the graph G_k on 3k+3 vertices is a 4-connected planar graph
+with a designated edge e such that G_k contains precisely 2k+2 cycles of pairwise
+distinct lengths each containing e.
+
+This shows Theorem 1.2 is tight: `⌈(3k+3)/2⌉ + 1 = 2k+2` for k = 1, 2.
+
+## Vertex structure
+
+The vertex set is {u₁,...,uₖ} ∪ {w₁,...,wₖ} ∪ {v₀,v₁,...,v_{k+1},v_{k+2}}:
+* `GkVertex.u i`: the u-path vertex uᵢ₊₁
+* `GkVertex.w i`: the w-path vertex wᵢ₊₁
+* `GkVertex.v j`: the v-path vertex vⱼ (j = 0,...,k+2)
+-/
+
+namespace Pancyclicity.GraphFamily
+
+/-- Vertex type for G_k: three groups. -/
+inductive GkVertex (k : ℕ) : Type
+  | u : Fin k → GkVertex k
+  | w : Fin k → GkVertex k
+  | v : Fin (k + 3) → GkVertex k
+  deriving DecidableEq
+
+instance (k : ℕ) : Fintype (GkVertex k) :=
+  Fintype.ofEquiv (Fin k ⊕ Fin k ⊕ Fin (k + 3))
+    { toFun := fun x => match x with
+        | .inl i => .u i
+        | .inr (.inl i) => .w i
+        | .inr (.inr j) => .v j
+      invFun := fun x => match x with
+        | .u i => .inl i
+        | .w i => .inr (.inl i)
+        | .v j => .inr (.inr j)
+      left_inv := by intro x; rcases x with (_|_|_) <;> rfl
+      right_inv := by intro x; cases x <;> rfl }
+
+/-- The vertex count of G_k is 3k+3. -/
+theorem GkVertex.card (k : ℕ) : Fintype.card (GkVertex k) = 3 * k + 3 := by
+  rw [show Fintype.card (GkVertex k) = Fintype.card (Fin k ⊕ Fin k ⊕ Fin (k + 3)) from
+    Fintype.card_congr
+      { toFun    := fun x => match x with
+            | .u i => Sum.inl i
+            | .w i => Sum.inr (Sum.inl i)
+            | .v j => Sum.inr (Sum.inr j)
+        invFun   := fun x => match x with
+            | Sum.inl i => .u i
+            | Sum.inr (Sum.inl i) => .w i
+            | Sum.inr (Sum.inr j) => .v j
+        left_inv := by intro x; cases x <;> rfl
+        right_inv := by intro x; rcases x with (_|_|_) <;> rfl }]
+  simp [Fintype.card_sum, Fintype.card_fin]
+  omega
+
+/-- The designated edge source v₀. -/
+def gkSrc (k : ℕ) : GkVertex k := .v ⟨0, by omega⟩
+
+/-- The designated edge target v_{k+2}. -/
+def gkTgt (k : ℕ) : GkVertex k := .v ⟨k + 2, by omega⟩
+
+/-- The graph G_k (adjacency axiomatized — see paper §5 for the explicit construction). -/
+axiom Gk (k : ℕ) : SimpleGraph (GkVertex k)
+
+/-- Decidability of adjacency in G_k. -/
+axiom Gk.instDecidableRel (k : ℕ) : DecidableRel (Gk k).Adj
+
+attribute [instance] Gk.instDecidableRel
+
+/-- The designated edge e = v₀v_{k+2} is an edge of G_k. -/
+axiom Gk.edge (k : ℕ) (hk : 1 ≤ k) : (Gk k).Adj (gkSrc k) (gkTgt k)
+
+/-- **G_k is 4-connected** (Shantanam, §5). -/
+axiom Gk.isKConnected_four (k : ℕ) (hk : 1 ≤ k) : (Gk k).IsKConnected 4
+
+/-- **G_k is planar** (Shantanam, §5). -/
+axiom Gk.isPlanar (k : ℕ) (hk : 1 ≤ k) : (Gk k).IsPlanar
+
+/-- **Theorem 1.3 (Tightness)**: For k ≥ 1, G_k on 3k+3 vertices contains precisely
+2k+2 cycles of pairwise distinct lengths containing the edge e = v₀v_{k+2}.
+
+This shows Theorem 1.2 is tight (achieved at k = 1, 2 where ⌈n/2⌉ + 1 = 2k+2). -/
+axiom Gk.cycle_count_exact (k : ℕ) (hk : 1 ≤ k) :
+    ((Gk k).edgeCycleSpectrum (gkSrc k) (gkTgt k) (Gk.edge k hk)).ncard = 2 * k + 2
+
+/-- The example G_k satisfies the lower bound of Theorem 1.2 for all k ≥ 1:
+`⌈(3k+3)/2⌉ + 1 ≤ 2k+2`. -/
+theorem Gk.example_satisfies_lower_bound (k : ℕ) (hk : 1 ≤ k) :
+    (Fintype.card (GkVertex k) + 1) / 2 + 1 ≤ 2 * k + 2 := by
+  rw [GkVertex.card]; omega
+
+/-- The bound of Theorem 1.2 is **tight** for k = 1 and k = 2:
+`⌈(3k+3)/2⌉ + 1 = 2k+2` in those cases. -/
+theorem Gk.tightness_k1 : (Fintype.card (GkVertex 1) + 1) / 2 + 1 = 2 * 1 + 2 := by
+  rw [GkVertex.card]
+
+theorem Gk.tightness_k2 : (Fintype.card (GkVertex 2) + 1) / 2 + 1 = 2 * 2 + 2 := by
+  rw [GkVertex.card]
+
+/-- G_k meets the lower bound of Theorem 1.2 for every k ≥ 1:
+the edge cycle spectrum through `e` has at least `⌈n/2⌉ + 1` elements,
+which is exactly the bound guaranteed by Theorem 1.2. -/
+theorem Gk.satisfies_theorem_bound (k : ℕ) (hk : 1 ≤ k) :
+    (Fintype.card (GkVertex k) + 1) / 2 + 1 ≤
+      ((Gk k).edgeCycleSpectrum (gkSrc k) (gkTgt k) (Gk.edge k hk)).ncard := by
+  rw [Gk.cycle_count_exact k hk]
+  exact Gk.example_satisfies_lower_bound k hk
+
+/-- For k ≥ 3, the Theorem 1.2 lower bound is **strictly below** the actual
+cycle count for G_k: `⌈(3k+3)/2⌉ + 1 < 2k+2`.
+
+This shows that for large k, the bound ⌈n/2⌉+1 is not achieved by the G_k family,
+and the family demonstrates room for improvement in the theorem. -/
+theorem Gk.not_tight_k_ge_three (k : ℕ) (hk : 3 ≤ k) :
+    (Fintype.card (GkVertex k) + 1) / 2 + 1 < 2 * k + 2 := by
+  rw [GkVertex.card]; omega
+
+/-- The Theorem 1.2 bound for G_k is tight (equality holds) **if and only if k ≤ 2**.
+
+* `k = 1`: `⌈6/2⌉ + 1 = 4 = 2·1+2` ✓ (see `tightness_k1`)
+* `k = 2`: `⌈9/2⌉ + 1 = 6 = 2·2+2` ✓ (see `tightness_k2`)
+* `k ≥ 3`: strict inequality (see `not_tight_k_ge_three`)
+
+This completely characterizes the tightness of the extremal family. -/
+theorem Gk.tightness_iff (k : ℕ) (hk : 1 ≤ k) :
+    (Fintype.card (GkVertex k) + 1) / 2 + 1 = 2 * k + 2 ↔ k ≤ 2 := by
+  rw [GkVertex.card]; omega
+
+/-- For k ≥ 3, G_k witnesses that the Theorem 1.2 bound `⌈n/2⌉+1` is genuinely
+sub-optimal: G_k itself has strictly more distinct cycle lengths through edge `e`
+than the bound predicts. -/
+theorem Gk.gap_k_ge_three (k : ℕ) (hk : 3 ≤ k) :
+    (Fintype.card (GkVertex k) + 1) / 2 + 1 <
+      ((Gk k).edgeCycleSpectrum (gkSrc k) (gkTgt k) (Gk.edge k (by omega))).ncard := by
+  rw [Gk.cycle_count_exact k (by omega), GkVertex.card]; omega
+
+end Pancyclicity.GraphFamily
