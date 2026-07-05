@@ -58,7 +58,9 @@ that state them, in whichever file matches the blueprint chapter.
 ## Assumed-results ledger
 
 Every `axiom` and `sorry` in `C4_free/`, bucketed by why it's assumed. Counts as
-of this ledger: **20 axioms, 2 `sorry`s**. Read the doc comment on each
+of this ledger: **6 axioms** (all in `GraphFamily.lean`, bucket D) **and 16
+`sorry`s** (14 migrated from former axioms, plus `malkevitch_conjecture` and
+the extracted `triangular_faces_diagonal_ne`). Read the doc comment on each
 declaration for the full statement and proof sketch — this table is an index,
 not a substitute.
 
@@ -95,16 +97,24 @@ Buckets:
 | D | `Gk.isPlanar` | `GraphFamily.lean` | `G_k` is planar |
 | D | `Gk.cycle_count_exact` | `GraphFamily.lean` | `G_k` has exactly `2k+2` distinct cycle lengths through `e` |
 | T | `malkevitch_conjecture` | `CycleSpectrum.lean` (`sorry`) | The end-goal conjecture |
-| P | *(anonymous inline `sorry`, ~line 711)* | `NoFourCycles.lean` (`sorry`) | A diagonal-vertex-distinctness goal inside `triangular_faces_edge_disjoint`, left mid-proof with exploratory comments; to be extracted into a named lemma |
+| P | `triangular_faces_diagonal_ne` | `NoFourCycles.lean` (`sorry`) | Diagonal-vertex-distinctness fact used inside `triangular_faces_edge_disjoint`; extracted from an in-progress proof attempt that explored several routes without closing the goal |
 
-**Policy going forward**: new assumed facts must be written as
-`theorem foo : T := sorry` with a doc comment explaining why, never as a bare
-new `axiom`. The (H) and (P) entries above currently use `axiom` as legacy debt
-from earlier work; migrating them to the `sorry`-theorem form (preserving
-statements byte-for-byte) is tracked as cleanup work. The (D) family is `axiom`
-because it axiomatizes *data* (a graph and its properties), which cannot be
-written as `sorry` — see `docs/graphfamily_options.md` for the plan to replace
-it with either a concrete construction or a hypothesis-bundling `structure`.
+All (H) and (P) entries above are `theorem foo : T := sorry` — every `axiom` in
+the project other than the (D) family has been migrated to this form, with
+statements preserved byte-for-byte. **Policy going forward**: new assumed facts
+must always be written this way (never as a bare new `axiom`). The (D) family
+is `axiom` because it axiomatizes *data* (a graph and its properties), which
+cannot be written as `sorry` — see `docs/graphfamily_options.md` for the plan
+to replace it with either a concrete construction or a hypothesis-bundling
+`structure`.
+
+**Note on `triangular_faces_diagonal_ne`**: the proof it was extracted from
+also had a second inline goal, informally called `hbd` (`d₁.fst ≠ d₁.snd`) in
+the original task brief for this cleanup. On inspection `hbd` was already
+proved trivially as `d₁.adj.ne` (no `sorry`, no exploratory comments) — so
+there was nothing to extract there. Only the `hac`-labelled goal
+(`d₁''.fst ≠ e₂.snd`, now `triangular_faces_diagonal_ne`) was genuinely
+unfinished.
 
 ## Blueprint
 

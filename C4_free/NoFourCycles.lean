@@ -493,6 +493,32 @@ theorem face_size_ne_four (pg : G.PlaneGraph) (hnoC4 : 4 ∉ G.cycleSpectrum) :
   -- Hence 4 ∈ cycleSpectrum
   exact hnoC4 ⟨d₁.fst, _, hcycle, by simp [Walk.length_cons]⟩
 
+/-- **(P)** **Diagonal-vertex distinctness for two glued triangular face-orbits.**
+
+Context (see `triangular_faces_edge_disjoint`): `f₁, f₂` are triangular faces
+(period-3 cycles of `pg.cmap.facePerm`) glued along a dart `d₁ ∈ f₁.support` and
+its reverse `d₂ = d₁.symm ∈ f₂.support`. Writing `d₁'' = f₁ (f₁ d₁)` for the last
+dart of `f₁`'s orbit and `e₂ = f₂ d₂`, `e₃ = f₂ e₂` for the last two darts of
+`f₂`'s orbit, the four "corner" vertices `a = d₁''.fst`, `b = d₁.fst`,
+`c = e₂.snd`, `dd = d₁.snd` are meant to form a 4-cycle `a–b–c–dd–a`. The
+consecutive edges `a–b`, `b–c`, `c–dd`, `dd–a` and the diagonal `b ≠ dd` are all
+immediate from dart adjacency; this lemma isolates the remaining diagonal
+`a ≠ c`.
+
+Assumed for now: left mid-proof in an earlier attempt that explored several
+routes via `pg.cmap.rotation_cyclic`/`Equiv.Perm.SameCycle` without closing the
+goal (see git history for the abandoned attempts). The right argument likely
+needs to relate the `pg.cmap.perm`-orbits of `d₁''` and `e₃` directly, which is
+more than `PlaneGraph.face_orbit_simple` alone provides. -/
+theorem triangular_faces_diagonal_ne
+    {pg : G.PlaneGraph} {f₁ f₂ : Equiv.Perm G.Dart} {d₁ d₁'' d₂ e₂ e₃ : G.Dart}
+    (hf₁_mem : f₁ ∈ pg.cmap.facePerm.cycleFactorsFinset)
+    (hf₂_mem : f₂ ∈ pg.cmap.facePerm.cycleFactorsFinset)
+    (hd₁''_in : d₁'' ∈ f₁.support) (he₂_in : e₂ ∈ f₂.support) (he₃_in : e₃ ∈ f₂.support)
+    (hf₁_period : f₁ d₁'' = d₁) (hf₂_period : f₂ e₃ = d₂)
+    (hv_f1_31 : d₁''.snd = d₁.fst) (hv_f2_23 : e₃.fst = e₂.snd) (hv_f2_31 : e₃.snd = d₁.snd) :
+    d₁''.fst ≠ e₂.snd := sorry
+
 /-- **Triangular faces are edge-disjoint in C₄-free graphs**: Two triangular faces sharing
 an edge `ab` would have third vertices `c, d` forming a 4-cycle `c–a–d–b–c`, contradicting
 C₄-freeness. Hence `3 * F₃ ≤ |E|`.
@@ -631,92 +657,10 @@ theorem triangular_faces_edge_disjoint (pg : G.PlaneGraph)
       -- dd ≠ a: d₁'.adj.ne (dd = d₁.snd = d₁'.fst, a = d₁'.snd = d₁''.fst)
       have hdda : d₁.snd ≠ d₁''.fst := by
         rw [← hv_f1_12, hv_f1_23]; exact d₁'.adj.ne
-      -- a ≠ c: if d₁''.fst = e₂.snd, then... use that d₁'' and e₂ share source after rewrite
-      have hac : d₁''.fst ≠ e₂.snd := by
-        intro h
-        -- d₁''.fst = e₂.snd = e₃.fst (from hv_f2_23)
-        -- d₁''.snd = d₁.fst (from hv_f1_31)
-        -- e₃.snd = d₁.snd (from hv_f2_31)
-        -- So dart d₁'' (d₁''.fst → d₁.fst) and dart e₃.symm (e₃.snd → e₃.fst = d₁''.fst)
-        -- have d₁''.fst = e₃.fst (using h and hv_f2_23)
-        have he₃fst : d₁''.fst = e₃.fst := h.trans hv_f2_23.symm
-        -- facePerm(d₁'') = d₁ (by period); facePerm(e₃) = d₂ (by period)
-        -- facePerm_fst: (facePerm d₁'').fst = d₁''.snd = d₁.fst (from hv_f1_31 symm)
-        -- (facePerm e₃).fst = e₃.snd = d₁.snd (from hv_f2_31)
-        -- d₁.fst ≠ d₁.snd (from d₁.adj.ne), so facePerm d₁'' ≠ facePerm e₃
-        -- But perm preserves source: (perm x).fst = x.fst
-        -- facePerm d = perm(d.symm); so (facePerm d₁'').fst = (perm(d₁''.symm)).fst = d₁''.symm.fst = d₁''.snd
-        -- Similarly for e₃
-        -- d₁''.fst = e₃.fst means d₁''.symm.fst = e₃.symm.fst (both equal to d₁''.snd = e₃.snd)
-        -- hmm this is getting complicated. Let me try: if d₁''.fst = e₃.fst, then
-        -- from face_orbit_simple on f₁ and f₂ we can't directly conclude since they're different faces
-        -- Instead: from d₁''.fst = e₃.fst, perm.source: (perm d₁''.symm).fst = d₁''.symm.fst = d₁''.snd
-        --          and (perm e₃.symm).fst = e₃.symm.fst = e₃.snd
-        -- rotation_cyclic: SameCycle perm d₁''.symm e₃.symm (same source d₁''.fst = e₃.fst)...
-        -- wait source is .fst of dart, not .fst of perm(dart). d₁''.symm.fst = d₁''.snd ≠ d₁''.fst = e₃.fst = e₃.symm.snd
-        -- Actually we want darts with d₁''.fst as source. rotation_cyclic gives SameCycle perm x y when x.fst = y.fst.
-        -- d₁''.fst = e₃.fst, so SameCycle perm d₁'' e₃.
-        -- Since d₁'' ∈ f₁.support: f₁ d₁'' = pg.cmap.facePerm d₁'' = perm(d₁''.symm)
-        -- And e₃ ∈ f₂.support: f₂ e₃ = pg.cmap.facePerm e₃ = perm(e₃.symm)
-        -- SameCycle perm d₁'' e₃ means ∃ n, (perm^n) d₁'' = e₃
-        -- perm d₁'' has source (perm d₁'').fst = d₁''.fst = e₃.fst via cm.source
-        -- This seems hard to use directly.
-        -- Simpler: d₁''.fst = e₃.fst. In f₁: facePerm d₁'' = d₁ (by period), so d₁.fst = d₁''.snd (by hv_f1_31 symm).
-        -- In f₂: facePerm e₃ = d₂ (by period), so d₂.fst = e₃.snd = d₁.snd (by hv_f2_31).
-        -- The dart d₁'' has fst = d₁''.fst and snd = d₁.fst (by hv_f1_31 symm: d₁.fst = d₁''.snd ↔ d₁''.snd = d₁.fst)
-        -- The dart e₃ has fst = e₃.fst = d₁''.fst and snd = d₁.snd (by hv_f2_31 symm)
-        -- So d₁'' : d₁''.fst → d₁.fst and e₃ : d₁''.fst → d₁.snd (same source)
-        -- rotation_cyclic: SameCycle perm d₁'' e₃ (since d₁''.fst = e₃.fst)
-        -- facePerm = perm ∘ symm. So perm(d₁''.symm) = facePerm(d₁'') = d₁, perm(e₃.symm) = facePerm(e₃) = d₂ = d₁.symm.
-        -- The cycle of perm containing d₁'' also contains e₃.
-        -- But d₁'' ∈ f₁.support (a cycle factor), and the cycle factors partition the support.
-        -- e₃ is in the same cycle of perm as d₁''... but wait, the facePerm cycles are determined by perm.
-        -- f₁ is a cycle of facePerm, not a cycle of perm. So this doesn't directly say d₁'' and e₃ are in the same facePerm cycle.
-        --
-        -- Let me use a completely different approach for hac:
-        -- If d₁''.fst = e₂.snd, then since e₂.snd = e₃.fst (by hv_f2_23),
-        -- d₁''.fst = e₃.fst. We also have d₁''.snd = d₁.fst (from hv_f1_31) and e₃.snd = d₁.snd (from hv_f2_31).
-        -- So we'd have two darts with same fst but different snd (d₁.fst ≠ d₁.snd by d₁.adj.ne).
-        -- Now in f₁: d₁'' → d₁ → d₁' → d₁'' (orbit). In f₂: d₂ → e₂ → e₃ → d₂.
-        -- facePerm(d₁'') = perm(d₁''.symm) = d₁ (period). So perm(d₁''.symm) = d₁.
-        -- facePerm(e₃) = perm(e₃.symm) = d₂ = d₁.symm.
-        -- d₁''.symm has fst = d₁''.snd = d₁.fst. e₃.symm has fst = e₃.snd = d₁.snd.
-        -- d₁.fst ≠ d₁.snd, so d₁''.symm.fst ≠ e₃.symm.fst.
-        -- rotation_cyclic requires same fst, so d₁'' and e₃ may not be in the same perm cycle.
-        --
-        -- Actually I think the cleanest proof of c ≠ a is:
-        -- Assume d₁''.fst = e₂.snd. Consider dart d₁'' and e₃ in f₁ and f₂ respectively.
-        -- perm(d₁''.symm) = facePerm(d₁'') = d₁ (from period relation: f₁(d₁'') = d₁ and f₁ acts as facePerm on support)
-        -- perm(e₃.symm) = facePerm(e₃) = d₂ = d₁.symm
-        -- perm source: (perm d₁''.symm).fst = d₁''.symm.fst = d₁''.snd = d₁.fst
-        -- so d₁.fst = d₁.fst ✓
-        -- (perm e₃.symm).fst = e₃.symm.fst = e₃.snd = d₁.snd (from hv_f2_31)
-        -- d₁''.fst = e₃.fst; d₁''.symm.fst = d₁''.snd = d₁.fst; e₃.symm.fst = e₃.snd = d₁.snd
-        -- rotation_cyclic: darts with same fst are perm-same-cycle
-        -- d₁''.symm.fst = d₁.fst ≠ d₁.snd = e₃.symm.fst (by d₁.adj.ne)
-        -- So d₁''.symm and e₃.symm are in DIFFERENT perm cycles (different sources).
-        -- Thus perm(d₁''.symm) and perm(e₃.symm) are in different orbits of perm... but they're both in the range of perm on their respective orbits.
-        --
-        -- Wait, I'm overcomplicating this. Let me just use the same orbit-size argument as for hne13 earlier:
-        -- Assume d₁''.fst = e₂.snd. Then...
-        -- Actually I realize there might be a simpler route. If d₁''.fst = e₂.snd:
-        -- d₁'' ∈ f₁.support, so (facePerm restricted to f₁ orbit) d₁'' ∈ f₁.support
-        -- But we need to show d₁'' = e₃ or something like that, which we can't.
-        --
-        -- Let me try a completely different approach: just use d₁.adj.ne somewhere.
-        -- d₁''.fst = e₂.snd.
-        -- e₂.fst = d₁.fst (from hv_f2_12). e₂.snd = d₁''.fst (from h).
-        -- So e₂ : d₁.fst → d₁''.fst.
-        -- d₁'' : d₁''.fst → d₁''.snd = d₁.fst (from hv_f1_31: d₁.fst = d₁''.snd, so d₁''.snd = d₁.fst).
-        -- So e₂ and d₁'' together give d₁.fst → d₁''.fst → d₁.fst.
-        -- Also d₁ : d₁.fst → d₁.snd.
-        -- Actually this gives e₂.symm and d₁'' have: d₁''.fst → d₁.fst = d₁''.fst... wait that would make d₁.fst = d₁''.fst which is hab!
-        -- (d₁''.snd = d₁.fst from hv_f1_31.symm). And e₂.snd = d₁''.fst from h.
-        -- So e₂: d₁.fst → d₁''.fst. Then d₁.fst adj d₁''.fst. And d₁'': d₁''.fst → d₁.fst. So d₁.fst adj d₁''.fst bidirectionally (which is obvious in simple graphs).
-        -- Hmm still not getting contradiction.
-        --
-        -- Let me just use sorry for hac and hbd for now. The key insight is these follow from the face_orbit_simple / the fact that the four darts d₁', d₁'', e₂, e₃ determine 4 distinct vertices.
-        sorry
+      -- a ≠ c: extracted as `triangular_faces_diagonal_ne` (assumed, see its doc comment)
+      have hac : d₁''.fst ≠ e₂.snd :=
+        triangular_faces_diagonal_ne hf₁_mem hf₂_mem hd₁''_in he₂_in he₃_in
+          hf₁_period hf₂_period hv_f1_31 hv_f2_23 hv_f2_31
       have hbd : d₁.fst ≠ d₁.snd := d₁.adj.ne
       -- b ≠ dd (= d₁.fst ≠ d₁.snd): already hbd
       -- dd ≠ c (= d₁.snd ≠ e₂.snd): hcdd.symm
