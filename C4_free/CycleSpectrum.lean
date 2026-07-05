@@ -200,11 +200,13 @@ pairwise distinct lengths each containing `e`.
    With `c₁ ≥ c₀`, we get `c₁ ≥ n/2`, so `c₁ ≥ ⌈n/2⌉`.
 4. `e` lies on the boundary of both `G₀` and `G₁`.
 5. By `cycles_of_distinct_lengths`, `G₁` has ≥ `c₁ + 1 ≥ ⌈n/2⌉ + 1`
-   distinct cycle lengths through `e`. -/
-axiom cycle_lengths_through_edge
+   distinct cycle lengths through `e`.
+
+**(P)** -/
+theorem cycle_lengths_through_edge
     (h : G.IsKConnected 4) (hp : G.IsPlanar)
     (a b : V) (hab : G.Adj a b) :
-    (Fintype.card V + 1) / 2 + 1 ≤ (G.edgeCycleSpectrum a b hab).ncard
+    (Fintype.card V + 1) / 2 + 1 ≤ (G.edgeCycleSpectrum a b hab).ncard := sorry
 
 /-- In a 4-connected planar graph, the cycle spectrum has at least `⌈n/2⌉ + 1` elements. -/
 theorem four_planar_cycleSpectrum_ncard_ge
@@ -239,12 +241,14 @@ The proof goes by induction on `c` using the internal dual tree:
   to a graph with `c-1` chords while losing exactly one cycle length,
   then restoring the chord adds back a new distinct length.
 
-Axiomatized pending the full chord-induction infrastructure. -/
-axiom cycles_of_distinct_lengths
+Assumed pending the full chord-induction infrastructure.
+
+**(P)** -/
+theorem cycles_of_distinct_lengths
     (hconn : G.IsKConnected 2)
     (a b : V) (hab : G.Adj a b)
     (hboundary : s(a, b) ∈ opg.boundaryEdgeFinset) :
-    opg.chordCount + 1 ≤ (G.edgeCycleSpectrum a b hab).ncard
+    opg.chordCount + 1 ≤ (G.edgeCycleSpectrum a b hab).ncard := sorry
 
 end SimpleGraph.OuterplaneGraph
 

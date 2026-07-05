@@ -42,37 +42,37 @@ namespace IsKConnected
 
 variable {G : SimpleGraph V} [DecidableRel G.Adj]
 
-/-- **Tutte's Theorem** (1956): Every 4-connected planar graph is Hamiltonian.
+/-- **(H)** **Tutte's Theorem** (1956): Every 4-connected planar graph is Hamiltonian.
 
-This is axiomatized. A full formalization would require Tutte paths and
+This is assumed. A full formalization would require Tutte paths and
 substantial planarity infrastructure. -/
-axiom isHamiltonian_of_isPlanar (h : G.IsKConnected 4) (hp : G.IsPlanar) :
-    G.IsHamiltonian
+theorem isHamiltonian_of_isPlanar (h : G.IsKConnected 4) (hp : G.IsPlanar) :
+    G.IsHamiltonian := sorry
 
-/-- **Sanders' Theorem** (1997): If G is a 4-connected planar graph and
+/-- **(H)** **Sanders' Theorem** (1997): If G is a 4-connected planar graph and
 e₁, e₂ are edges of G, then there exists a Hamiltonian cycle in G
 containing both e₁ and e₂.
 
 This strengthens Tutte's theorem and is the key tool for Theorems 1.2 and 1.4.
-Axiomatized. -/
-axiom hamiltonianCycle_through_edges
+Assumed. -/
+theorem hamiltonianCycle_through_edges
     (h : G.IsKConnected 4) (hp : G.IsPlanar)
     (e₁ e₂ : Sym2 V) (he₁ : e₁ ∈ G.edgeSet) (he₂ : e₂ ∈ G.edgeSet) :
     ∃ (v : V) (C : G.Walk v v), C.IsHamiltonianCycle ∧
-      e₁ ∈ C.edges ∧ e₂ ∈ C.edges
+      e₁ ∈ C.edges ∧ e₂ ∈ C.edges := sorry
 
-/-- **Whitney's Theorem** (1932): A 3-connected planar graph has a unique
+/-- **(H)** **Whitney's Theorem** (1932): A 3-connected planar graph has a unique
 combinatorial embedding up to orientation — any two plane graph structures on
 `G` differ only by a dart-permutation automorphism (i.e., a relabelling of
 darts that conjugates one rotation system into the other).
 
 This justifies working with "the" embedding of a 4-connected planar graph.
-Axiomatized. -/
-axiom unique_planar_embedding (h : G.IsKConnected 3)
+Assumed. -/
+theorem unique_planar_embedding (h : G.IsKConnected 3)
     (pg1 pg2 : G.PlaneGraph) :
     ∃ e : Equiv.Perm G.Dart,
       (∀ d, (e d).fst = d.fst) ∧
-      ∀ d, pg2.cmap.perm (e d) = e (pg1.cmap.perm d)
+      ∀ d, pg2.cmap.perm (e d) = e (pg1.cmap.perm d) := sorry
 
 end IsKConnected
 

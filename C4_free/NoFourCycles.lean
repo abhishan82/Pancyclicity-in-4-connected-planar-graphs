@@ -99,15 +99,17 @@ then `s^{>5} ≤ n/3 - 10`.
 Here `s^{>5}` is the total excess-5 sum `∑_{F: |F|>5} (|F| - 5)` over all
 non-outer faces of the decomposition.
 
-Axiomatized — the proof proceeds by a discharging argument exploiting the
-5-tree structure of 5-face blocks. -/
-axiom discharging_bound
+Assumed — the proof proceeds by a discharging argument exploiting the
+5-tree structure of 5-face blocks.
+
+**(P)** -/
+theorem discharging_bound
     (pg : G.PlaneGraph) (hconn : G.IsKConnected 4)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum)
     (D : PlaneGraph.HamiltonianDecomp pg)
     (fc : PlaneGraph.HamiltonianDecomp.FaceCounts 5) :
-    fc.s_gt ≤ (Fintype.card V : ℤ) / 3 - 10
+    fc.s_gt ≤ (Fintype.card V : ℤ) / 3 - 10 := sorry
 
 end SimpleGraph.PlaneGraph
 
@@ -128,8 +130,10 @@ at least `n - 5 - sᵢ^{>5}` cycles of pairwise distinct lengths.
 
 The lower bound is stated in terms of the `FaceCounts` field `s₀_gt` or `s₁_gt`.
 
-Axiomatized — the proof uses the internal dual tree structure and induction. -/
-axiom enumeration_lemma
+Assumed — the proof uses the internal dual tree structure and induction.
+
+**(P)** -/
+theorem enumeration_lemma
     (hconn : G.IsKConnected 4)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum)
@@ -141,7 +145,7 @@ axiom enumeration_lemma
     (hQ_adj₁ : pg.dual.Adj ⟨Q, Q.2⟩ ⟨lt₁.face, lt₁.face.2⟩)
     (hQ_adj₂ : pg.dual.Adj ⟨Q, Q.2⟩ ⟨lt₂.face, lt₂.face.2⟩) :
     (Fintype.card V : ℤ) - 5 - fc.s₀_gt ≤
-      (G.cycleSpectrum.ncard : ℤ)
+      (G.cycleSpectrum.ncard : ℤ) := sorry
 
 end SimpleGraph.PlaneGraph.HamiltonianDecomp
 
@@ -155,16 +159,18 @@ incident with faces `Q₀, R, Q₁, R'` (where `R, R'` are triangular), then for
 some side `i ∈ {0, 1}` there is a set `C` of pairwise distinct cycle lengths with
 `|C| ≥ n - 5 - s^{>5}/2`.
 
-Axiomatized — follows from the enumeration lemma via a case analysis on the
-Hamiltonian decomposition. -/
-axiom wellTriangulated_cycle_enumeration
+Assumed — follows from the enumeration lemma via a case analysis on the
+Hamiltonian decomposition.
+
+**(P)** -/
+theorem wellTriangulated_cycle_enumeration
     (pg : G.PlaneGraph)
     (hconn : G.IsKConnected 4)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum)
     (v : V) (hv : pg.isWellTriangulated v) (hdeg : G.degree v = 4)
     (fc : PlaneGraph.HamiltonianDecomp.FaceCounts 5) :
-    (Fintype.card V : ℤ) - 5 - fc.s_gt / 2 ≤ (G.cycleSpectrum.ncard : ℤ)
+    (Fintype.card V : ℤ) - 5 - fc.s_gt / 2 ≤ (G.cycleSpectrum.ncard : ℤ) := sorry
 
 end SimpleGraph.PlaneGraph
 
@@ -184,13 +190,15 @@ distinct lengths with `|C| ≥ ⌈5n/6⌉`. Consequently,
 (The "+2" accounts for the two smallest cycle lengths 3 and the Hamiltonian
 cycle length `n` which are always present.)
 
-Axiomatized — the proof combines the discharging bound with the enumeration
-lemma via Corollary 5.2. -/
-axiom cycle_spectrum_no_four_cycles
+Assumed — the proof combines the discharging bound with the enumeration
+lemma via Corollary 5.2.
+
+**(P)** -/
+theorem cycle_spectrum_no_four_cycles
     (h : G.IsKConnected 4) (hp : G.IsPlanar)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum) :
-    (5 * Fintype.card V + 5) / 6 + 2 ≤ G.cycleSpectrum.ncard
+    (5 * Fintype.card V + 5) / 6 + 2 ≤ G.cycleSpectrum.ncard := sorry
 
 /-- For n ≥ 5, the C₄-free cycle spectrum lower bound (Theorem 1.4)
 is at least as large as the general lower bound (Theorem 1.2):
@@ -990,8 +998,10 @@ Every tree admits a partition of its vertices into disjoint paths such that:
 * Exactly one path has both endpoints being leaves of the tree.
 
 This is used to structure the chord induction in the outerplanar cycle
-enumeration argument. Axiomatized. -/
-axiom leafPathsPartition
+enumeration argument. Assumed.
+
+**(P)** -/
+theorem leafPathsPartition
     (hT : G.IsTree) :
     ∃ (paths : Finset (V × V)) (walkOf : ∀ e : V × V, G.Walk e.1 e.2),
       -- each pair names a path
@@ -1001,7 +1011,7 @@ axiom leafPathsPartition
       -- at least one endpoint of each path is a tree-leaf (degree 1)
       (∀ e ∈ paths, G.degree e.1 = 1 ∨ G.degree e.2 = 1) ∧
       -- exactly one path has both endpoints being tree-leaves
-      (∃! e ∈ paths, G.degree e.1 = 1 ∧ G.degree e.2 = 1)
+      (∃! e ∈ paths, G.degree e.1 = 1 ∧ G.degree e.2 = 1) := sorry
 
 end SimpleGraph.IsTree
 
@@ -1015,11 +1025,13 @@ For `(G, C, G₀, G₁)` where `G` has no 4-cycles, the number of chords `cᵢ` 
 `cᵢ ≤ ⌊5(n-3)/7⌋`.
 
 This refines the general chord count using the 4-cycle-free face structure.
-Axiomatized. -/
-axiom chord_bound_no_four_cycles
+Assumed.
+
+**(P)** -/
+theorem chord_bound_no_four_cycles
     (hconn : G.IsKConnected 2)
     (hnoC4 : 4 ∉ G.cycleSpectrum) :
-    7 * opg.chordCount ≤ 5 * (Fintype.card V - 3)
+    7 * opg.chordCount ≤ 5 * (Fintype.card V - 3) := sorry
 
 /-- **Edge bound for C₄-free outerplane graphs**
 (`OuterplaneGraph.outerplane_edge_bound_no_four_cycles`):
@@ -1055,8 +1067,10 @@ For `(G, C, G₀, G₁)` with `G` on `n ≥ 5` vertices and no 4-cycles, the num
 of leaf-triangles `tᵢ` on side `i` satisfies `tᵢ ≥ sᵢ^{>5} + 2cᵢ - n + 4`.
 
 This is derived using the internal dual tree and the discharging weight function.
-Axiomatized. -/
-axiom leaf_triangle_bound
+Assumed.
+
+**(P)** -/
+theorem leaf_triangle_bound
     (hconn : G.IsKConnected 4)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum)
@@ -1065,21 +1079,23 @@ axiom leaf_triangle_bound
     (hc₀ : @OuterplaneGraph.chordCount V _ _ D.G₀ D.inst₀ D.op₀ = c₀)
     (hc₁ : @OuterplaneGraph.chordCount V _ _ D.G₁ D.inst₁ D.op₁ = c₁) :
     fc.s₀_gt + 2 * (c₀ : ℤ) - Fintype.card V + 4 ≤ t₀ ∧
-    fc.s₁_gt + 2 * (c₁ : ℤ) - Fintype.card V + 4 ≤ t₁
+    fc.s₁_gt + 2 * (c₁ : ℤ) - Fintype.card V + 4 ≤ t₁ := sorry
 
 /-- **Leaf-triangle corollary** (blueprint: `PlaneGraph.HamiltonianDecomp.leaf_triangle_corollary`):
 Under the same conditions with `|E(G)| ≥ 2n`:
 * (i) `t₁ ≥ s₁^{>5} + 4`, and
 * (ii) `t₀ + t₁ ≥ s^{>5} + 8`.
 
-Axiomatized — follows from the leaf-triangle bound with the 4-connected edge count. -/
-axiom leaf_triangle_corollary
+Assumed — follows from the leaf-triangle bound with the 4-connected edge count.
+
+**(P)** -/
+theorem leaf_triangle_corollary
     (hconn : G.IsKConnected 4)
     (hn : 5 ≤ Fintype.card V)
     (hnoC4 : 4 ∉ G.cycleSpectrum)
     (hedge : 2 * Fintype.card V ≤ G.edgeFinset.card)
     (fc : PlaneGraph.HamiltonianDecomp.FaceCounts 5)
     (t₀ t₁ : ℕ) :
-    (fc.s₁_gt : ℤ) + 4 ≤ t₁ ∧ fc.s_gt + 8 ≤ t₀ + t₁
+    (fc.s₁_gt : ℤ) + 4 ≤ t₁ ∧ fc.s_gt + 8 ≤ t₀ + t₁ := sorry
 
 end SimpleGraph.PlaneGraph.HamiltonianDecomp

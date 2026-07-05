@@ -245,12 +245,12 @@ theorem sum_faceWeight_eq :
   -- h_split_σ now: A + (V - 2) = 2V - 4; goal: A = V - 2
   omega
 
-/-- **Internal dual is a tree** (Mohar): The internal dual of a 2-connected
+/-- **(P)** **Internal dual is a tree** (Mohar): The internal dual of a 2-connected
 outerplane graph is a tree.
 
-Axiomatized — the proof proceeds by induction on the number of chords,
+Assumed — the proof proceeds by induction on the number of chords,
 using the fact that removing a chord splits the internal dual along a leaf. -/
-axiom internalDual_isTree (hconn : G.IsKConnected 2) : opg.internalDual.IsTree
+theorem internalDual_isTree (hconn : G.IsKConnected 2) : opg.internalDual.IsTree := sorry
 
 end OuterplaneGraph
 
