@@ -2,6 +2,54 @@
 
 Dated summaries of agent work sessions on this repo. Newest entries at the top.
 
+## 2026-07-07 (continued) — checkdecls root cause found; blueprint deployed successfully
+
+**Context**: continuation of the same-day session below. User provided the raw
+CI log for the "Compile blueprint and documentation" failure that the
+previous entry couldn't get past unauthenticated.
+
+**Done**:
+1. Raw log showed the real failure: `lake exe checkdecls blueprint/lean_decls`
+   (part of `docgen-action`'s blueprint step) listed 31 `\lean{...}` targets
+   in `content.tex` as missing declarations — not the pdf/Jekyll legs
+   suspected earlier.
+2. Diagnosed all 31: confirmed via namespace `grep` across `Foundations/*.lean`
+   and `NoFourCycles.lean` that every one lives inside `namespace SimpleGraph`
+   (directly or via `SimpleGraph.PlaneGraph`/`SimpleGraph.OuterplaneGraph`).
+   26 were simple missing-`SimpleGraph.`-prefix fixes, plus one non-prefix
+   correction (`PlaneGraph.Face` is actually `SimpleGraph.SurfaceGraph.Face`
+   — `Face` lives on the more general `SurfaceGraph` that `PlaneGraph` is an
+   `abbrev` over). Verified locally (`checkdecls`, `leanblueprint pdf`,
+   `leanblueprint web`) before pushing. Commit `95c05e3`.
+3. Remaining 5 (`OuterplaneGraph.chord`, and 4 items under
+   `PlaneGraph.HamiltonianDecomp.{weight_w,sum_weight_eq,weight_wprime,
+   sum_wprime_eq}`) looked like renames from actual implementation rather
+   than typos, so produced a side-by-side verification table (blueprint TeX
+   statement vs. candidate Lean declaration vs. semantic-gap note) instead of
+   guessing — flagged a missed grep earlier (`OuterplaneGraph.IsChord` does
+   exist; a word-boundary regex just didn't match inside `IsChord`) and two
+   real conventions worth noting (per-side vs. joint phrasing for `w`;
+   dart-indexed-with-`/2` vs. edge-indexed for `w'`).
+4. Author confirmed all 5 identifications. Retargeted `\lean{}` refs
+   (`content.tex` + `blueprint/lean_decls`) to `OuterplaneGraph.IsChord`,
+   `OuterplaneGraph.faceWeight`, `OuterplaneGraph.sum_faceWeight_eq`,
+   `PlaneGraph.edgeDartWeight`, `PlaneGraph.sum_edgeDartWeight_eq` (all under
+   `SimpleGraph.`), added one remark sentence each to the `weight_wprime` and
+   `cor:wprime_sum` TeX nodes about the dart/edge convention (math content
+   unchanged). Verified all three locally again, all green. Commit `c829079`.
+5. Pushed, watched the full run (`28867560862`) — **succeeded end-to-end for
+   the first time**, ~27 minutes (first real `doc-gen4`/Jekyll build against
+   Mathlib, no warm cache). Confirmed live: site root, `/blueprint/`,
+   dependency graph (renders, 52 graph-node elements, not an empty shell),
+   `blueprint.pdf`, `/docs/` — all HTTP 200.
+6. Updated README's Blueprint section with direct links to the live home
+   page, blueprint, dependency graph, PDF, and API docs (was previously an
+   aspirational single link written before Pages was enabled). Commit
+   `d248b62`.
+
+**State at end of session**: `main` at `d248b62` (pushed). Blueprint deploys
+successfully on every push to `main` going forward. No open CI issues.
+
 ## 2026-07-07 — CI fixes: lint driver, concurrency collision, mk_all, blueprint-compile
 
 **Context**: following up on Task 3's finding that `blueprint.yml` had never
