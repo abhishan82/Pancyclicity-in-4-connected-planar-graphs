@@ -44,7 +44,7 @@ jobs:
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # 2025-07-02
         with:
           build: true
-          lint: true
+          lint: false # no lint driver configured in lakefile.toml; build-project.yml covers the full build
           mk_all-check: true
 
       - name: Compile blueprint and documentation
