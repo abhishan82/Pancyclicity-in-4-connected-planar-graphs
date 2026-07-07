@@ -163,7 +163,7 @@
 
 \begin{definition}[Chord]
   \label{def:chord}
-  \lean{OuterplaneGraph.chord}
+  \lean{SimpleGraph.OuterplaneGraph.IsChord}
   \uses{def:outerplane}
   \notready
   A \emph{chord} of an outerplane graph is an edge not contained in the
@@ -265,7 +265,7 @@
 
 \begin{definition}[Weight function $w$]
   \label{def:weight_w}
-  \lean{PlaneGraph.HamiltonianDecomp.weight_w}
+  \lean{SimpleGraph.OuterplaneGraph.faceWeight}
   \uses{def:internal_dual_trees, def:face}
   \notready
   For each $v \in V(T_0) \cup V(T_1)$, define $w(v) = |\mathrm{df}(v)| - 2$,
@@ -274,7 +274,7 @@
 
 \begin{proposition}[Sum of weights]
   \label{prop:weight_sum}
-  \lean{PlaneGraph.HamiltonianDecomp.sum_weight_eq}
+  \lean{SimpleGraph.OuterplaneGraph.sum_faceWeight_eq}
   \uses{def:weight_w, def:ham_decomp}
   \notready
   For each $i \in \{0, 1\}$,
@@ -285,20 +285,29 @@
 
 \begin{definition}[Weight function $w'$]
   \label{def:weight_wprime}
-  \lean{PlaneGraph.HamiltonianDecomp.weight_wprime}
+  \lean{SimpleGraph.PlaneGraph.edgeDartWeight}
   \uses{def:face}
   \notready
   For each $e \in E(G)$ with incident faces $Q_e, Q'_e \in F(G)$, define
   $w'(e) = \frac{|Q_e| - 2}{|Q_e|} + \frac{|Q'_e| - 2}{|Q'_e|}$.
+
+  The formalization is dart-indexed rather than edge-indexed: it assigns a
+  value to each of the two darts of $e$ (which agree, since the formula is
+  symmetric in the two incident faces), and the edge-level sum below is
+  recovered via the factor $2$.
 \end{definition}
 
 \begin{corollary}[Sum of $w'$]
   \label{cor:wprime_sum}
-  \lean{PlaneGraph.HamiltonianDecomp.sum_wprime_eq}
+  \lean{SimpleGraph.PlaneGraph.sum_edgeDartWeight_eq}
   \uses{def:weight_wprime, prop:weight_sum}
   \notready
   If $G$ is a plane Hamiltonian graph on $n$ vertices, then
   $\sum_{e \in E(G)} w'(e) = 2(n - 2)$.
+
+  The formalization sums the dart-indexed $w'$ over all darts and divides by
+  $2$, matching the edge-indexed statement above since each edge contributes
+  its (equal) value twice, once per dart.
 \end{corollary}
 
 % ============================================================

@@ -13,7 +13,7 @@ SimpleGraph.PlaneGraph.internalDual
 SimpleGraph.IsKConnected.unique_planar_embedding
 SimpleGraph.IsOuterplanar
 SimpleGraph.OuterplaneGraph
-OuterplaneGraph.chord
+SimpleGraph.OuterplaneGraph.IsChord
 SimpleGraph.OuterplaneGraph.internalDual_isTree
 SimpleGraph.IsKConnected.isHamiltonian_of_isPlanar
 SimpleGraph.IsKConnected.hamiltonianCycle_through_edges
@@ -22,10 +22,10 @@ SimpleGraph.PlaneGraph.HamiltonianDecomp.internalDualTrees
 SimpleGraph.cycleSpectrum
 SimpleGraph.IsPancyclic
 SimpleGraph.malkevitch_conjecture
-PlaneGraph.HamiltonianDecomp.weight_w
-PlaneGraph.HamiltonianDecomp.sum_weight_eq
-PlaneGraph.HamiltonianDecomp.weight_wprime
-PlaneGraph.HamiltonianDecomp.sum_wprime_eq
+SimpleGraph.OuterplaneGraph.faceWeight
+SimpleGraph.OuterplaneGraph.sum_faceWeight_eq
+SimpleGraph.PlaneGraph.edgeDartWeight
+SimpleGraph.PlaneGraph.sum_edgeDartWeight_eq
 SimpleGraph.OuterplaneGraph.cycles_of_distinct_lengths
 SimpleGraph.IsKConnected.cycle_lengths_through_edge
 Pancyclicity.GraphFamily.Gk
