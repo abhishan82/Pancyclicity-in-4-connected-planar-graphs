@@ -62,7 +62,7 @@
 
 \begin{definition}[Plane graph]
   \label{def:plane_graph}
-  \lean{PlaneGraph}
+  \lean{SimpleGraph.PlaneGraph}
   \uses{def:comb_map}
   \notready
   A \emph{plane graph} is a simple graph $G$ together with a combinatorial
@@ -71,7 +71,7 @@
 
 \begin{definition}[Face]
   \label{def:face}
-  \lean{PlaneGraph.Face}
+  \lean{SimpleGraph.SurfaceGraph.Face}
   \uses{def:plane_graph}
   \notready
   A \emph{face} of a plane graph is an orbit of the face permutation
@@ -83,7 +83,7 @@
 
 \begin{definition}[Infinite (outer) face]
   \label{def:outer_face}
-  \lean{PlaneGraph.outerFace}
+  \lean{SimpleGraph.PlaneGraph.outerFace}
   \uses{def:face}
   \notready
   One distinguished face of a plane graph is designated as the \emph{infinite
@@ -101,7 +101,7 @@
 
 \begin{theorem}[Euler's formula]
   \label{thm:euler_formula}
-  \lean{PlaneGraph.euler_formula}
+  \lean{SimpleGraph.PlaneGraph.euler_formula}
   \uses{def:plane_graph, def:face}
   \notready
   For a connected plane graph $G$ on $n$ vertices with $m$ edges and $f$
@@ -110,7 +110,7 @@
 
 \begin{definition}[Dual graph]
   \label{def:dual_graph}
-  \lean{PlaneGraph.dual}
+  \lean{SimpleGraph.PlaneGraph.dual}
   \uses{def:plane_graph, def:face}
   \notready
   Given a plane graph $G$, its \emph{dual graph} $G^*$ has a vertex $F^*$
@@ -120,7 +120,7 @@
 
 \begin{definition}[Internal dual]
   \label{def:internal_dual}
-  \lean{PlaneGraph.internalDual}
+  \lean{SimpleGraph.PlaneGraph.internalDual}
   \uses{def:dual_graph, def:outer_face}
   \notready
   The \emph{internal dual} of a plane graph $G$ with outer face dual to the
@@ -154,7 +154,7 @@
 
 \begin{definition}[Outerplane graph]
   \label{def:outerplane}
-  \lean{OuterplaneGraph}
+  \lean{SimpleGraph.OuterplaneGraph}
   \uses{def:plane_graph, def:outer_face}
   \notready
   An \emph{outerplane graph} is an outerplanar graph with a fixed planar
@@ -172,7 +172,7 @@
 
 \begin{lemma}[Internal dual of 2-connected outerplanar is a tree]
   \label{lem:outerplanar_dual_tree}
-  \lean{OuterplaneGraph.internalDual_isTree}
+  \lean{SimpleGraph.OuterplaneGraph.internalDual_isTree}
   \uses{def:outerplane, def:internal_dual, def:k_connected}
   \notready
   The internal dual of a $2$-connected outerplanar graph is a tree.
@@ -204,7 +204,7 @@
 
 \begin{definition}[Hamiltonian decomposition $(G, C, G_0, G_1)$]
   \label{def:ham_decomp}
-  \lean{PlaneGraph.HamiltonianDecomp}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp}
   \uses{def:plane_graph, def:outerplane}
   \notready
   For a plane Hamiltonian graph $G$ with Hamiltonian cycle $C$, we define
@@ -216,7 +216,7 @@
 
 \begin{definition}[Internal dual trees $T_0, T_1$]
   \label{def:internal_dual_trees}
-  \lean{PlaneGraph.HamiltonianDecomp.internalDualTrees}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.internalDualTrees}
   \uses{def:ham_decomp, def:internal_dual}
   \notready
   For $(G, C, G_0, G_1)$, let $T_0$ and $T_1$ be the internal duals of
@@ -309,7 +309,7 @@
 
 \begin{lemma}[Lemma 3.1: Outerplane cycle enumeration]
   \label{lem:outerplane_cycles}
-  \lean{OuterplaneGraph.cycles_of_distinct_lengths}
+  \lean{SimpleGraph.OuterplaneGraph.cycles_of_distinct_lengths}
   \uses{def:outerplane, def:chord, def:internal_dual}
   \notready
   If $G$ is a $2$-connected outerplane graph on $n$ vertices containing $c$
@@ -369,7 +369,7 @@
 
 \begin{definition}[Face counting notation]
   \label{def:face_counts}
-  \lean{PlaneGraph.HamiltonianDecomp.FaceCounts}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.FaceCounts}
   \uses{def:ham_decomp, def:face}
   \notready
   For $(G, C, G_0, G_1)$, define for each $i \in \{0,1\}$ and
@@ -383,7 +383,7 @@
 
 \begin{definition}[5-fan]
   \label{def:five_fan}
-  \lean{PlaneGraph.FiveFan}
+  \lean{SimpleGraph.PlaneGraph.FiveFan}
   \uses{def:face}
   \notready
   A \emph{5-fan incident with $v$} is a maximal set $J \subset F(G)$ of
@@ -393,7 +393,7 @@
 
 \begin{definition}[5-block]
   \label{def:five_block}
-  \lean{PlaneGraph.FiveBlock}
+  \lean{SimpleGraph.PlaneGraph.FiveBlock}
   \uses{def:face, def:dual_graph}
   \notready
   A \emph{5-block} is a maximal set $J \subset F(G)$ of $5$-faces such that
@@ -403,7 +403,7 @@
 
 \begin{definition}[5-flower]
   \label{def:five_flower}
-  \lean{PlaneGraph.FiveFlower}
+  \lean{SimpleGraph.PlaneGraph.FiveFlower}
   \uses{def:five_block}
   \notready
   A \emph{5-flower} is a 5-block of six members $\{P_0, \ldots, P_5\}$ where
@@ -413,7 +413,7 @@
 
 \begin{definition}[5-tree]
   \label{def:five_tree}
-  \lean{PlaneGraph.FiveTree}
+  \lean{SimpleGraph.PlaneGraph.FiveTree}
   \uses{def:five_block}
   \notready
   A \emph{5-tree} is an acyclic 5-block $J$ such that each vertex $u$ in
@@ -424,7 +424,7 @@
 
 \begin{lemma}[5-tree counting]
   \label{lem:five_tree_count}
-  \lean{PlaneGraph.FiveTree.member_count}
+  \lean{SimpleGraph.PlaneGraph.FiveTree.member_count}
   \uses{def:five_tree}
   \notready
   A 5-tree whose dual 5-block contains $p \ge 0$ vertices of degree 5
@@ -436,7 +436,7 @@
 
 \begin{lemma}[Lemma 4.1: Upper bound on $s^{>5}$]
   \label{lem:discharging}
-  \lean{PlaneGraph.discharging_bound}
+  \lean{SimpleGraph.PlaneGraph.discharging_bound}
   \uses{def:face_counts, def:five_tree, def:five_fan, def:five_block,
         cor:wprime_sum, thm:euler_formula, lem:five_tree_count}
   \notready
@@ -453,7 +453,7 @@
 
 \begin{definition}[Leaf-triangle]
   \label{def:leaf_triangle}
-  \lean{PlaneGraph.HamiltonianDecomp.LeafTriangle}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.LeafTriangle}
   \uses{def:ham_decomp, def:face}
   \notready
   A \emph{leaf-triangle} of $(G, C)$ is a triangular face of $G$ whose
@@ -463,7 +463,7 @@
 
 \begin{definition}[Well-triangulated vertex]
   \label{def:well_triangulated}
-  \lean{PlaneGraph.isWellTriangulated}
+  \lean{SimpleGraph.PlaneGraph.isWellTriangulated}
   \uses{def:face}
   \notready
   A \emph{well-triangulated vertex} is one of even degree $d$ that is
@@ -472,7 +472,7 @@
 
 \begin{lemma}[Lemma 5.1: Enumeration lemma]
   \label{lem:enumeration}
-  \lean{PlaneGraph.HamiltonianDecomp.enumeration_lemma}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.enumeration_lemma}
   \uses{def:ham_decomp, def:leaf_triangle, def:face_counts, def:weight_w,
         def:internal_dual_trees, lem:outerplanar_dual_tree}
   \notready
@@ -487,7 +487,7 @@
 
 \begin{corollary}[Corollary 5.2]
   \label{cor:well_triang_enum}
-  \lean{PlaneGraph.wellTriangulated_cycle_enumeration}
+  \lean{SimpleGraph.PlaneGraph.wellTriangulated_cycle_enumeration}
   \uses{lem:enumeration, thm:sanders, def:well_triangulated, def:face_counts}
   \notready
   Let $G$ be a $4$-connected plane graph on $n \ge 5$ vertices without
@@ -518,7 +518,7 @@
 
 \begin{proposition}[Edge bound]
   \label{prop:edge_bound}
-  \lean{PlaneGraph.edge_bound_no_four_cycles}
+  \lean{SimpleGraph.PlaneGraph.edge_bound_no_four_cycles}
   \uses{def:face, thm:euler_formula}
   \notready
   If $G$ is a plane graph on $n \ge 5$ vertices without $4$-cycles, then
@@ -536,7 +536,7 @@
 
 \begin{proposition}[Chord bound]
   \label{prop:chord_bound}
-  \lean{OuterplaneGraph.chord_bound_no_four_cycles}
+  \lean{SimpleGraph.OuterplaneGraph.chord_bound_no_four_cycles}
   \uses{def:outerplane, def:chord, thm:euler_formula}
   \notready
   For $(G, C, G_0, G_1)$ with $G$ having no $4$-cycles, the number of
@@ -545,7 +545,7 @@
 
 \begin{lemma}[Leaf-triangle bound]
   \label{lem:leaf_triangle_bound}
-  \lean{PlaneGraph.HamiltonianDecomp.leaf_triangle_bound}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.leaf_triangle_bound}
   \uses{def:leaf_triangle, def:face_counts, prop:leaf_paths}
   \notready
   For $(G, C, G_0, G_1)$ with $G$ on $n \ge 5$ vertices, no $4$-cycles:
@@ -554,7 +554,7 @@
 
 \begin{corollary}[Leaf-triangle corollary]
   \label{cor:leaf_triangle_cor}
-  \lean{PlaneGraph.HamiltonianDecomp.leaf_triangle_corollary}
+  \lean{SimpleGraph.PlaneGraph.HamiltonianDecomp.leaf_triangle_corollary}
   \uses{lem:leaf_triangle_bound, lem:four_conn_edge_count}
   \notready
   Under the same conditions with $|E(G)| \ge 2n$:
