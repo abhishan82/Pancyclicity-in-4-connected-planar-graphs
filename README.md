@@ -121,7 +121,13 @@ unfinished.
 The blueprint (dependency graph + statements) is built with
 [leanblueprint](https://github.com/PatrickMassot/leanblueprint) from
 [`blueprint/src/content.tex`](blueprint/src/content.tex) and deployed to GitHub
-Pages: **https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/**
+Pages:
+
+* **[Home page](https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/)**
+* **[Blueprint](https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/blueprint/)**
+  / [dependency graph](https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/blueprint/dep_graph_document.html)
+  / [PDF](https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/blueprint.pdf)
+* **[API docs](https://abhishan82.github.io/Pancyclicity-in-4-connected-planar-graphs/docs/)**
 
 ## Development
 
