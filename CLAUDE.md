@@ -16,10 +16,14 @@ live in the blueprint TeX under `blueprint/` — never invent them.
 - `C4_free/Axioms.lean` — deep external hammers only (Tutte 1956; Sanders,
   J. Graph Theory 24(4):341–345, 1997; Whitney). Bucket H.
 - `C4_free/CycleSpectrum.lean`, `NoFourCycles.lean` — main development.
-- `C4_free/GraphFamily.lean` — QUARANTINE CANDIDATE: axiomatized data (Gk).
-  Do not build on it; decision doc at docs/graphfamily_options.md.
-- README ledger tracks every assumed result (buckets H/P/D/T). Keep it in
-  sync with any sorry/axiom change, same commit.
+- `GraphFamily` (Gk, Theorem 1.3's extremal family) is QUARANTINED — moved to
+  `docs/deferred/GraphFamily.lean.disabled`, out of the import chain. Do not
+  reinstate without implementing one of the two options in
+  docs/graphfamily_options.md (concrete construction, or a hypothesis-taking
+  structure).
+- README ledger tracks every assumed result (buckets H/P/T; D retired along
+  with the quarantine — see README's Deferred section). Keep it in sync with
+  any sorry/axiom change, same commit.
 
 ## Non-negotiable conventions
 
@@ -52,8 +56,9 @@ live in the blueprint TeX under `blueprint/` — never invent them.
 
 ## Current milestone
 
-1. Blueprint site live and linked in README.
-2. GraphFamily decision executed once the author decides (quarantine
-   expected: file out of import chain, ledger to 0 axioms).
+1. ~~Blueprint site live and linked in README.~~ Done 2026-07-07.
+2. ~~GraphFamily decision executed.~~ Done 2026-07-13: quarantined per author
+   decision — file moved to docs/deferred/GraphFamily.lean.disabled, out of
+   the import chain, README ledger at 0 axioms.
 3. First proof: `triangular_faces_diagonal_ne` (freshly extracted, CombMap
    level) — then weekly-lemma pipeline on bucket-P items.

@@ -344,18 +344,23 @@
 
 \begin{definition}[Graph family $G_k$]
   \label{def:gk_construction}
-  \lean{Pancyclicity.GraphFamily.Gk}
   \notready
   For any integer $k \ge 1$, define the graph $G_k$ on $3k+3$ vertices as
   follows. Let $P_U = u_1 \cdots u_k$, $P_W = w_1 \cdots w_k$,
   $P_V = v_1 \cdots v_{k+1}$ be disjoint paths. For each $i$, connect
   $u_i$ and $w_i$ to both $v_i$ and $v_{i+1}$. Add vertices $v_0, v_{k+2}$
   with specified adjacencies and edge $e = v_0 v_{k+2}$.
+
+  Not currently linked to a Lean formalization: the prior axiomatized-data
+  encoding (\texttt{Gk}) was quarantined (moved to
+  \texttt{docs/deferred/GraphFamily.lean.disabled}) since an axiomatized
+  graph with axiomatized properties risks an inconsistent environment. See
+  \texttt{docs/graphfamily\_options.md} for the plan to reinstate it via a
+  concrete construction or a hypothesis-bundling structure.
 \end{definition}
 
 \begin{lemma}[$G_k$ is 4-connected and planar]
   \label{lem:gk_properties}
-  \lean{Pancyclicity.GraphFamily.Gk.isKConnected_four}
   \uses{def:gk_construction, def:k_connected, def:is_planar}
   \notready
   For each $k \ge 1$, $G_k$ is $4$-connected and planar.
@@ -363,7 +368,6 @@
 
 \begin{theorem}[Theorem 1.3: Tightness]
   \label{thm:tightness}
-  \lean{Pancyclicity.GraphFamily.Gk.cycle_count_exact}
   \uses{def:gk_construction, lem:gk_properties, lem:outerplane_cycles}
   \notready
   For any $k \ge 1$, $G_k$ on $3k+3$ vertices contains precisely $2k+2$

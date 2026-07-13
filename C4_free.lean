@@ -7,5 +7,4 @@ import C4_free.Foundations.HamiltonianDecomp
 import C4_free.Foundations.KConnected
 import C4_free.Foundations.OuterplaneGraph
 import C4_free.Foundations.PlaneGraph
-import C4_free.GraphFamily
 import C4_free.NoFourCycles

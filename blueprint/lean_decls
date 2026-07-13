@@ -28,9 +28,6 @@ SimpleGraph.PlaneGraph.edgeDartWeight
 SimpleGraph.PlaneGraph.sum_edgeDartWeight_eq
 SimpleGraph.OuterplaneGraph.cycles_of_distinct_lengths
 SimpleGraph.IsKConnected.cycle_lengths_through_edge
-Pancyclicity.GraphFamily.Gk
-Pancyclicity.GraphFamily.Gk.isKConnected_four
-Pancyclicity.GraphFamily.Gk.cycle_count_exact
 SimpleGraph.PlaneGraph.HamiltonianDecomp.FaceCounts
 SimpleGraph.PlaneGraph.FiveFan
 SimpleGraph.PlaneGraph.FiveBlock

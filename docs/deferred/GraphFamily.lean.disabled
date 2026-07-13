@@ -3,6 +3,26 @@ Copyright (c) 2025 Abhinav Shantanam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhinav Shantanam
 -/
+
+/-
+QUARANTINED — not part of the build (excluded from C4_free.lean's import chain,
+`.disabled` extension so Lake never compiles it).
+
+`Gk` (Theorem 1.3's tightness family) was axiomatized as *data* — an
+axiomatized graph plus axiomatized properties of that graph, which risks an
+inconsistent environment (everything provable) with no way for Lean to catch
+it. Nothing else in the repo referenced `Gk`/`GkVertex`/`gkSrc`/`gkTgt`
+(confirmed by repo-wide grep before quarantining), so removing it costs
+nothing downstream — it only affects the tightness/gap theorems declared
+in this same file.
+
+Reinstate once one of the two options in `docs/graphfamily_options.md` is
+implemented: (a) a concrete construction of `Gk` with its properties as
+`sorry`ed theorems, or (b) bundling the family into a hypothesis-taking
+`ExtremalFamily` structure. See that file for a full difficulty/cost
+comparison and the recommendation ((b) now, (a) later).
+-/
+
 import Mathlib.Data.Set.Card
 import C4_free.CycleSpectrum
 

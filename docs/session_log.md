@@ -2,6 +2,47 @@
 
 Dated summaries of agent work sessions on this repo. Newest entries at the top.
 
+## 2026-07-13 — Quarantine GraphFamily.lean; repo now axiom-free
+
+**Context**: author's decision from `docs/graphfamily_options.md` (Task 6):
+quarantine `Gk` rather than pursue a concrete construction or a
+hypothesis-bundling structure right now.
+
+**Done**:
+1. Confirmed via repo-wide grep (`Gk\b|GkVertex|gkSrc|gkTgt|GraphFamily`
+   across `C4_free/`) that nothing outside `GraphFamily.lean` itself
+   referenced any of it — matches the earlier Task 6 finding, so quarantining
+   costs nothing downstream in the Lean code.
+2. Moved `C4_free/GraphFamily.lean` to
+   `docs/deferred/GraphFamily.lean.disabled` (`.disabled` extension keeps
+   Lake from compiling it) with a header comment explaining why it's
+   quarantined and how to reinstate it. Removed `import C4_free.GraphFamily`
+   from `C4_free.lean` via `lake exe mk_all` (regenerated cleanly, no other
+   changes). `lake build` stays green (1315 jobs).
+3. Quarantining broke `lake exe checkdecls` again: 3 blueprint `\lean{}` refs
+   (`Pancyclicity.GraphFamily.Gk`, `.isKConnected_four`, `.cycle_count_exact`,
+   for `def:gk_construction`/`lem:gk_properties`/`thm:tightness`) pointed at
+   declarations that no longer compile. Not explicitly asked for, but left
+   unfixed would have regressed the blueprint deploy pipeline from the
+   previous session — removed those 3 `\lean{}` lines from `content.tex` and
+   `blueprint/lean_decls`, added a short remark to `def:gk_construction`
+   noting the quarantine and pointing at `docs/graphfamily_options.md`. Left
+   the mathematical content (statements) of all three nodes untouched, just
+   unlinked. Verified `checkdecls` (zero missing), `leanblueprint pdf`,
+   `leanblueprint web` all green.
+4. Updated the README ledger: axiom count now **0** (bucket D retired), added
+   a "Deferred" section explaining the quarantine and linking
+   `docs/graphfamily_options.md`, updated the architecture diagram and the
+   Theorem 1.3 bullet to flag it as currently unlinked to Lean.
+5. Final repo-wide check: `grep -rn "^axiom" C4_free/` → 0 hits. 16 `sorry`s,
+   matching the ledger. (The quarantined file still contains its axioms
+   textually, preserved for reinstatement — Lake just never sees them.)
+6. Updated `CLAUDE.md`'s Layout section and Current milestone (items 1 and 2
+   now marked done, dated).
+
+**State at end of session**: `main` pushed, `lake build` green, blueprint
+pipeline green, repo has zero `axiom` declarations in the compiled tree.
+
 ## 2026-07-07 (continued) — checkdecls root cause found; blueprint deployed successfully
 
 **Context**: continuation of the same-day session below. User provided the raw
