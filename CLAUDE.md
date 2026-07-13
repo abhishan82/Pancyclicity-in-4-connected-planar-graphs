@@ -39,6 +39,10 @@ live in the blueprint TeX under `blueprint/` — never invent them.
 - **Stop-and-report over improvising.**
 - **Session log:** end every session by appending a dated summary to
   `docs/session_log.md` (append only), commit, push.
+- **Session startup:** read `docs/next_session.md` and execute it. **Session
+  end:** overwrite it with the next session's prompt (agreed with the
+  author), then commit — a session isn't finished until its successor is
+  queued.
 - **Prover log:** every stuck/failed proof attempt gets one line in
   `docs/prover_log.md` (date, lemma, model/tool, outcome). Failures are
   benchmark data — record them.
