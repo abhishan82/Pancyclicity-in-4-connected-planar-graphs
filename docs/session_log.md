@@ -2,6 +2,51 @@
 
 Dated summaries of agent work sessions on this repo. Newest entries at the top.
 
+## 2026-07-16 — triangular_faces_diagonal_ne disproved (K₃ counterexample)
+
+**Context**: session-startup task from `docs/next_session.md` (queued
+2026-07-13): prove `triangular_faces_diagonal_ne`, no new axioms/sorries,
+statement unchanged, search Mathlib/Foundations first, stop-and-report after
+3 distinct failed strategies.
+
+**Done**:
+1. Before writing any tactics, worked through the lemma's actual mathematical
+   content by hand: it claims that gluing two triangular faces along a dart
+   forces their two "opposite" corner vertices to differ. Suspected a
+   degenerate small-graph case could violate this (the inner/outer faces of
+   a bare triangle share every edge, and the "opposite" vertex is the same
+   one in both, since there are only 3 vertices total).
+2. Verified the suspicion formally rather than trusting hand-analysis: built
+   `K₃` (`Fin 3`, complete graph) as an explicit `G.PlaneGraph` in a scratch
+   file (rotation system = swap the 2 darts at each vertex per vertex;
+   `Euler formula` and `face_orbit_simple` both `decide`d). Its unique
+   embedding has exactly 2 faces, both triangular, sharing all 3 edges.
+3. Instantiated `triangular_faces_diagonal_ne`'s exact 10 hypotheses with
+   concrete witnesses from this model and proved, as one `decide`d
+   conjunction, that every hypothesis holds **and** the conclusion's
+   negation holds (i.e. the conclusion is false). `#print axioms` on this
+   confirmed **zero `sorryAx`** — a genuine, sorry-free disproof, not an
+   artifact of the lemma's own `sorry`.
+4. Diagnosis: the lemma (and its only caller, `triangular_faces_edge_disjoint`)
+   has no vertex-count hypothesis excluding this case. Every sibling lemma in
+   `NoFourCycles.lean` carries `hn : 5 ≤ Fintype.card V`; these two don't.
+   Fixing this requires a statement change (adding that hypothesis and
+   threading it through the call site) — out of scope for this session's
+   "statement unchanged" constraint.
+5. Deleted the scratch verification file (never committed, per the
+   no-scratch-files rule). Logged the full counterexample in
+   `docs/prover_log.md` (2026-07-16 entry).
+6. Presented findings to the author with three options (fix now / defer to
+   next session / other). Author chose defer. Seeded `docs/next_session.md`
+   with a pre-authorized statement-change task: add
+   `hn : 5 ≤ Fintype.card V` to both lemmas, verify `lake build` green, then
+   attempt the proof under the corrected statement.
+
+**State at end of session**: no changes to `C4_free/` source this session —
+the finding is a disproof of the existing statement, not a fix. `lake build`
+unaffected (not rebuilt, no source touched). `docs/prover_log.md`,
+`docs/next_session.md` updated; this entry appended.
+
 ## 2026-07-13 — Quarantine GraphFamily.lean; repo now axiom-free
 
 **Context**: author's decision from `docs/graphfamily_options.md` (Task 6):
