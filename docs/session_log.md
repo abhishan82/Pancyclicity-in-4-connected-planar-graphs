@@ -2,6 +2,42 @@
 
 Dated summaries of agent work sessions on this repo. Newest entries at the top.
 
+## 2026-07-21 — Thread `hn : 5 ≤ Fintype.card V` through the triangular-faces chain
+
+**Context**: follow-up to the 2026-07-16 disproof of `triangular_faces_diagonal_ne`
+(K₃ counterexample). While discussing where that lemma sits in the paper's
+proof (it's step 3 of Proposition 6.1's proof, `edge_bound_no_four_cycles`),
+the author pointed out that `edge_bound_no_four_cycles` already carries
+`hn : 5 ≤ Fintype.card V` — it just never gets passed down through
+`triangular_faces_edge_disjoint` into `triangular_faces_diagonal_ne`, neither
+of which accepted it. So the fix isn't introducing a new assumption, it's
+correctly plumbing one that was already true at the only real call site.
+
+**Done**:
+1. Added `hn : 5 ≤ Fintype.card V` to `triangular_faces_diagonal_ne`'s
+   signature; doc comment updated with a dated correction note pointing at
+   the K₃ counterexample and clarifying this is a threading fix, not new
+   math, and that sufficiency (does `n ≥ 5` actually complete the proof?) is
+   still open.
+2. Added the same hypothesis to `triangular_faces_edge_disjoint` (its only
+   purpose there is to pass it through) and updated its one internal call to
+   `triangular_faces_diagonal_ne` to supply `hn`.
+3. Updated `edge_bound_no_four_cycles`'s call to `triangular_faces_edge_disjoint`
+   to pass its own (already-present) `hn`.
+4. Verified: `grep` confirms no other call sites of either lemma exist.
+   `lake build` green, 1315 jobs, same single `sorry` as before (statement
+   changed, proof still deferred).
+5. Logged the correction in `docs/prover_log.md` (2026-07-21 entry, distinct
+   from the 2026-07-16 disproof — append-only, nothing edited).
+6. Rewrote `docs/next_session.md`: threading is done, so next session's task
+   is now just the proof attempt under the corrected (hopefully true)
+   statement, with the sufficiency question flagged explicitly as something
+   that attempt needs to resolve, not assume.
+
+**State at end of session**: `main` pushed (pending), `lake build` green,
+`triangular_faces_diagonal_ne` and `triangular_faces_edge_disjoint` both now
+require `n ≥ 5`, both still `sorry`/depend-on-`sorry` respectively.
+
 ## 2026-07-16 — triangular_faces_diagonal_ne disproved (K₃ counterexample)
 
 **Context**: session-startup task from `docs/next_session.md` (queued

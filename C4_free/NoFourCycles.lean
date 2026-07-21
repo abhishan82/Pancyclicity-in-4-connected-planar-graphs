@@ -509,9 +509,23 @@ Assumed for now: left mid-proof in an earlier attempt that explored several
 routes via `pg.cmap.rotation_cyclic`/`Equiv.Perm.SameCycle` without closing the
 goal (see git history for the abandoned attempts). The right argument likely
 needs to relate the `pg.cmap.perm`-orbits of `d₁''` and `e₃` directly, which is
-more than `PlaneGraph.face_orbit_simple` alone provides. -/
+more than `PlaneGraph.face_orbit_simple` alone provides.
+
+**Correction (2026-07-21)**: as originally stated (no `hn` hypothesis), this
+is FALSE — machine-checked counterexample on `K₃` (`Fin 3`, the triangle
+graph): its unique embedding has exactly 2 faces, both triangular, sharing
+all 3 edges, and the "opposite" vertex relative to any shared edge is
+necessarily the same vertex on both sides (only 3 vertices exist). See the
+2026-07-16 entry in `docs/prover_log.md` for the full construction. Added
+`hn` here, threading through the `hn` already available (but previously
+unused) at this lemma's only call site
+(`triangular_faces_edge_disjoint` → `edge_bound_no_four_cycles`) — not a new
+mathematical assumption, just correctly propagating one that was always
+true in context. Whether `n ≥ 5` is actually *sufficient* to close the proof
+(vs. merely ruling out the `n = 3` counterexample) is still open. -/
 theorem triangular_faces_diagonal_ne
     {pg : G.PlaneGraph} {f₁ f₂ : Equiv.Perm G.Dart} {d₁ d₁'' d₂ e₂ e₃ : G.Dart}
+    (hn : 5 ≤ Fintype.card V)
     (hf₁_mem : f₁ ∈ pg.cmap.facePerm.cycleFactorsFinset)
     (hf₂_mem : f₂ ∈ pg.cmap.facePerm.cycleFactorsFinset)
     (hd₁''_in : d₁'' ∈ f₁.support) (he₂_in : e₂ ∈ f₂.support) (he₃_in : e₃ ∈ f₂.support)
@@ -525,9 +539,12 @@ C₄-freeness. Hence `3 * F₃ ≤ |E|`.
 
 **Proof**: The map `d ↦ s(d.fst, d.snd)` is injective on `triF.biUnion f.support`.
 If two darts from *different* triangular faces map to the same edge, one is the reverse of
-the other; their triangles' remaining darts then form an explicit 4-cycle. -/
+the other; their triangles' remaining darts then form an explicit 4-cycle.
+
+Takes `hn : 5 ≤ Fintype.card V` solely to thread it through to
+`triangular_faces_diagonal_ne`; see that lemma's doc comment for why. -/
 theorem triangular_faces_edge_disjoint (pg : G.PlaneGraph)
-    (hnoC4 : 4 ∉ G.cycleSpectrum) :
+    (hn : 5 ≤ Fintype.card V) (hnoC4 : 4 ∉ G.cycleSpectrum) :
     3 * (pg.faceFinset.filter (fun f => f.support.card = 3)).card ≤ G.edgeFinset.card := by
   set triF := pg.faceFinset.filter (fun f => f.support.card = 3) with htriF_def
   -- The dart biUnion: all darts on triangular faces
@@ -659,7 +676,7 @@ theorem triangular_faces_edge_disjoint (pg : G.PlaneGraph)
         rw [← hv_f1_12, hv_f1_23]; exact d₁'.adj.ne
       -- a ≠ c: extracted as `triangular_faces_diagonal_ne` (assumed, see its doc comment)
       have hac : d₁''.fst ≠ e₂.snd :=
-        triangular_faces_diagonal_ne hf₁_mem hf₂_mem hd₁''_in he₂_in he₃_in
+        triangular_faces_diagonal_ne hn hf₁_mem hf₂_mem hd₁''_in he₂_in he₃_in
           hf₁_period hf₂_period hv_f1_31 hv_f2_23 hv_f2_31
       have hbd : d₁.fst ≠ d₁.snd := d₁.adj.ne
       -- b ≠ dd (= d₁.fst ≠ d₁.snd): already hbd
@@ -802,7 +819,7 @@ theorem edge_bound_no_four_cycles
     linarith
   -- (C) 3F₃ ≤ E  (no two triangular faces share an edge)
   have h3F3 : 3 * (triF.card : ℤ) ≤ G.edgeFinset.card := by
-    exact_mod_cast triangular_faces_edge_disjoint pg hnoC4
+    exact_mod_cast triangular_faces_edge_disjoint pg hn hnoC4
   -- Arithmetic conclusion: 3×hSumBound + 2×h3F3, then substitute F via Euler.
   linarith
 
